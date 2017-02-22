@@ -6,6 +6,7 @@
 package funcoes;
 
 import Enum.TipoOnda;
+import util.ConfiguracaoProjeto;
 
 /**
  *
@@ -15,10 +16,10 @@ public class Quadrada implements Onda{
 
     float amplitude;
     float periodo;
+    ConfiguracaoProjeto cfg;
 
-    public Quadrada(float amplitude, float periodo) {
-        this.amplitude = amplitude;
-        this.periodo = periodo;
+    public Quadrada(ConfiguracaoProjeto cfg) {
+        this.cfg = cfg;
     }
     
     @Override
@@ -28,15 +29,15 @@ public class Quadrada implements Onda{
        
     @Override
     public double calcular(float tempo) {
-      if(periodo == 0) {
+      if(cfg.getPeriodo() == 0) {
             return 0;
         }
 
-        float tempoAtual = tempo%periodo;
-        if (tempoAtual < periodo/2.0) {
-            return amplitude;
+        float tempoAtual = tempo%cfg.getPeriodo();
+        if (tempoAtual < cfg.getPeriodo()/2.0) {
+            return cfg.getAmplitude();
         } else {
-            return -1*amplitude;
+            return -1*cfg.getAmplitude();
         }
     }
 }

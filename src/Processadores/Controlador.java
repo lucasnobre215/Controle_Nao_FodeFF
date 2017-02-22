@@ -6,7 +6,10 @@
 package Processadores;
 
 import Graficos.FuncaoTimeSeries;
+import Graficos.TimeSeriesChart;
 import funcoes.Onda;
+import util.ConfiguracaoProjeto;
+import util.FabricaOnda;
 
 /**
  *
@@ -14,17 +17,16 @@ import funcoes.Onda;
  */
 public abstract class Controlador implements Runnable{
     
-    private Onda onda;
-    private FuncaoTimeSeries graficoFuncao;
+    public Onda onda;
+    public ConfiguracaoProjeto cfg;
+    public TimeSeriesChart graficoFuncao;
     //adicionar funcao
-    private Float tempo;
-
-    public Controlador(Onda onda, FuncaoTimeSeries grafico) {
-        this.onda = onda;
-        this.graficoFuncao = graficoFuncao;
-        this.tempo = 0f;
-    }
     
+    public Controlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao) {
+        this.onda = cfg.getOnda();
+        this.cfg = cfg;
+        this.graficoFuncao = graficoFuncao;
+    }    
     
     
     

@@ -6,6 +6,7 @@
 package funcoes;
 
 import Enum.TipoOnda;
+import util.ConfiguracaoProjeto;
 
 /**
  *
@@ -13,16 +14,17 @@ import Enum.TipoOnda;
  */
 public class Degrau implements Onda{
     
-    float amplitude;
+    ConfiguracaoProjeto cfg;
+    
 
-    public Degrau(float amplitude) {
-        this.amplitude = amplitude;
+    public Degrau(ConfiguracaoProjeto cfg) {
+         this.cfg= cfg;
     }
     
 
     @Override
     public double calcular(float tempo) {
-        return amplitude;
+        return cfg.getAmplitude();
     }
     
     @Override

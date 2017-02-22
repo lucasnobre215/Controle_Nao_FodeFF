@@ -7,7 +7,14 @@ package controlelab1;
 
 import Graficos.TimeSeriesChart;
 import Enum.TipoOnda;
+import static Enum.TipoOnda.Degrau;
+import static Enum.TipoOnda.Serra;
 import Graficos.FuncaoTimeSeries;
+import Processadores.ControladorMalhaAberta;
+import funcoes.Degrau;
+import funcoes.Onda;
+import funcoes.Quadrada;
+import funcoes.Senoide;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.io.IOException;
@@ -16,8 +23,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JRadioButton;
 import projetocontrole.dominio.Aleatoria;
+import util.ConfiguracaoProjeto;
 import util.InterfaceUtil;
 import util.StringUtil;
+import static java.lang.Thread.sleep;
+import util.FabricaOnda;
+import util.ThreadFactory;
 
 /**
  *
@@ -25,20 +36,22 @@ import util.StringUtil;
  */
 public class Gui extends javax.swing.JFrame {
 
-    TimeSeriesChart tsChart;
+    TimeSeriesChart funcaoChart;
     TipoOnda tipo;
+    ConfiguracaoProjeto cfg;
 
     /**
      * Creates new form Gui
      */
     public Gui() {
         initComponents();
+        cfg = new ConfiguracaoProjeto();
         Component[] funcoes = seletorFuncaoPanel.getComponents();
         for (Component funcao : funcoes) {
             buttonGroup1.add((JRadioButton) funcao);
         }
-        tsChart = new FuncaoTimeSeries("teste", "Volts");
-        funcaoPanel.add(tsChart);
+        funcaoChart = new FuncaoTimeSeries("Função de Entrada", "Tensão (V)");
+        funcaoPanel.add(funcaoChart);
         funcaoPanel.revalidate();
         funcaoPanel.setLayout(new GridLayout(1, 1));
         funcaoPanel.repaint();
@@ -193,35 +206,35 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        periodo.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(-4.0f), Float.valueOf(4.0f), Float.valueOf(0.5f)));
+        periodo.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.5f));
         periodo.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 periodoStateChanged(evt);
             }
         });
 
-        tensaoMaxAle.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(-4.0f), Float.valueOf(4.0f), Float.valueOf(0.5f)));
+        tensaoMaxAle.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.5f));
         tensaoMaxAle.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tensaoMaxAledadosSinalGeradoChanged(evt);
             }
         });
 
-        periodoMaxAle.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(-4.0f), Float.valueOf(4.0f), Float.valueOf(0.5f)));
+        periodoMaxAle.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.5f));
         periodoMaxAle.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 periodoMaxAleStateChanged(evt);
             }
         });
 
-        tensaoMinAle.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(-4.0f), Float.valueOf(4.0f), Float.valueOf(0.5f)));
+        tensaoMinAle.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.5f));
         tensaoMinAle.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 stateChangedHandler(evt);
             }
         });
 
-        periodoMinAle.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(-4.0f), Float.valueOf(4.0f), Float.valueOf(0.5f)));
+        periodoMinAle.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.5f));
         periodoMinAle.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 periodoMinAledadosSinalGeradoChanged(evt);
@@ -244,36 +257,34 @@ public class Gui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel5)
-                            .addComponent(tensaoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tensaoMinAle)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(52, 52, 52))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tipoOndaLabel))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(periodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(amplitudeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tipoOndaLabel))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel5)
+                                .addComponent(tensaoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(58, 58, 58)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6)
+                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                    .addGap(2, 2, 2)
+                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(periodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(amplitudeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,27 +307,30 @@ public class Gui extends javax.swing.JFrame {
                 .addGap(37, 37, 37)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tensaoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel8)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(94, 94, 94)
+                        .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(34, 34, 34))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tensaoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel8))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addGap(34, 34, 34))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                        .addGap(24, 24, 24)
+                                        .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         jButton3.setText("Confirmar");
@@ -338,7 +352,8 @@ public class Gui extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton3))))
@@ -350,12 +365,12 @@ public class Gui extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Gráficos"));
@@ -486,33 +501,33 @@ public class Gui extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String ondaString = InterfaceUtil.getSelectedButtonText(buttonGroup1);
         tipo = TipoOnda.valueOf(StringUtil.removerAcentos(ondaString));
-        System.out.println(tipo);
         tipoOndaLabel.setText(ondaString);
         habilitarCampos(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void periodoMinAledadosSinalGeradoChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoMinAledadosSinalGeradoChanged
-        atualizarParametrosMalha(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_periodoMinAledadosSinalGeradoChanged
 
     private void tensaoMaxAledadosSinalGeradoChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tensaoMaxAledadosSinalGeradoChanged
-        atualizarParametrosMalha(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_tensaoMaxAledadosSinalGeradoChanged
 
     private void amplitudeSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_amplitudeSliderMouseReleased
-        atualizarParametrosMalha(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_amplitudeSliderMouseReleased
 
     private void stateChangedHandler(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_stateChangedHandler
-        atualizarParametrosMalha(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_stateChangedHandler
 
     private void periodoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoStateChanged
-        atualizarParametrosMalha(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_periodoStateChanged
 
     private void periodoMaxAleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoMaxAleStateChanged
-        atualizarParametrosMalha(tipo);
+        atualizarParametrosMalha();
     }//GEN-LAST:event_periodoMaxAleStateChanged
 
     /**
@@ -614,25 +629,36 @@ public class Gui extends javax.swing.JFrame {
         periodoMaxAle.setEnabled(false);
     }
 
-    private void atualizarParametrosMalha(TipoOnda tipo) {
+    private void atualizarParametrosMalha() {
+        float amplitude = (float) this.amplitudeSlider.getValue();
+        float periodo = Float.valueOf(this.periodo.getValue().toString());
+        double tensaoMax = Double.valueOf(this.tensaoMaxAle.getValue().toString());
+        double tensaoMin = Double.valueOf(this.tensaoMinAle.getValue().toString());
+        float periodoMax = Float.valueOf(this.periodoMaxAle.getValue().toString());
+        float periodoMin = Float.valueOf(this.periodoMinAle.getValue().toString());
+        double tensaoMaxAle = Float.valueOf(this.periodoMaxAle.getValue().toString());
+        cfg.setAmplitude(new Float(amplitudeSlider.getValue()));
+        cfg.setAmplitudeMax(tensaoMax);
+        cfg.setAmplitudeMin(tensaoMin);
+        cfg.setDuracaoMax(periodoMax);
+        cfg.setDuracaoMin(periodoMin);
+        cfg.setPeriodo(periodo);
+        cfg.setTipoOnda(tipo);
+        atualizaThreadControle(cfg);
+
     }
 
     private void iniciar() {
-        new Thread() {
-            @Override
-            public void run() {
-                float i = 0;
-                Aleatoria teste = new Aleatoria(4, 0, 4, 2);
-                while (true) {
-
-                    try {
-                        tsChart.aualizarGrafico(teste.calcular(i++));
-                        sleep(100);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }.start();
+        atualizarParametrosMalha();
+        ControladorMalhaAberta controle = new ControladorMalhaAberta(cfg, funcaoChart);
+        Thread controleThread = ThreadFactory.produzirThread(controle, "Controle");
+        controleThread.start();
+        System.out.println("ta rodando fi");
     }
+
+    public void atualizaThreadControle(ConfiguracaoProjeto cfg) {
+        Onda novaOnda = FabricaOnda.fabricarOnda(cfg);
+        this.cfg.setOnda(novaOnda);
+    }
+
 }

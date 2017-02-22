@@ -86,7 +86,8 @@ public abstract class TimeSeriesChart extends JPanel {
         eixoy.setAutoRangeMinimumSize(getRangeY().getLength());
     }
 
-    public void aualizarGrafico(double lastValue) {
+   
+    public void atualizarGrafico(double lastValue) {
         final Millisecond now = new Millisecond();
         this.series.add(new Millisecond(), lastValue);
     }

@@ -6,21 +6,20 @@
 package Graficos;
 
 import org.jfree.data.Range;
-import org.jfree.data.time.Millisecond;
 
 /**
  *
  * @author lucasnobre
  */
-public class FuncaoTimeSeries extends TimeSeriesChart {
+public class NivelTimeSeries extends TimeSeriesChart{
 
-    public FuncaoTimeSeries(String titulo, String grandeza) {
+     public NivelTimeSeries(String titulo, String grandeza) {
         super(titulo, grandeza);
     }
 
     @Override
     public Range getRangeY() {
-        return new Range(-5,4);
+        return new Range(-1, 30);
     } 
 
     @Override

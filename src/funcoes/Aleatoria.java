@@ -8,6 +8,7 @@ package projetocontrole.dominio;
 import Enum.TipoOnda;
 import funcoes.Onda;
 import java.util.Random;
+import util.ConfiguracaoProjeto;
 
 /**
  * Classe que representa uma onda Pseudoaleatoria
@@ -15,28 +16,19 @@ import java.util.Random;
  */
 public class Aleatoria implements Onda {
 
-    private double amplitudeMax;
-    private double amplitudeMin;
-    private float duracaoMax;
-    private float duracaoMin;
-    private float duracaoAleatoria;
-    private double amplitudeAleatoria;
+    ConfiguracaoProjeto cfg;
+    float duracaoAleatoria;
+    double amplitudeAleatoria;
     
-    public Aleatoria() {
+    public Aleatoria(ConfiguracaoProjeto cfg) {
+        this.cfg = cfg;
+        duracaoAleatoria = -1;
     }
     
-    public Aleatoria(double amplitudeMax, double amplitudeMin,
-            float duracaoMax, float duracaoMin) {
-        this.amplitudeMax = amplitudeMax;
-        this.amplitudeMin = amplitudeMin;
-        this.duracaoMax = duracaoMax;
-        this.duracaoMin = duracaoMin;
-        this.duracaoAleatoria = geraDuracao();
-        this.amplitudeAleatoria = geraNumAleatorio(amplitudeMax,amplitudeMin);
-    }
+    
     
     private float geraDuracao() {
-        return (float) geraNumAleatorio(duracaoMax, duracaoMin);
+        return (float) geraNumAleatorio(cfg.getDuracaoMax(), cfg.getDuracaoMin());
     }
     
     private double geraNumAleatorio(double max, double min) {
@@ -44,53 +36,6 @@ public class Aleatoria implements Onda {
         return rand.nextDouble()*(max - min) + min;
     }
 
-    public double getAmplitudeMax() {
-        return amplitudeMax;
-    }
-
-    public void setAmplitudeMax(float amplitudeMax) {
-        this.amplitudeMax = amplitudeMax;
-    }
-
-    public double getAmplitudeMin() {
-        return amplitudeMin;
-    }
-
-    public void setAmplitudeMin(float amplitudeMin) {
-        this.amplitudeMin = amplitudeMin;
-    }
-
-    public float getDuracaoMax() {
-        return duracaoMax;
-    }
-
-    public void setDuracaoMax(float duracaoMax) {
-        this.duracaoMax = duracaoMax;
-    }
-
-    public float getDuracaoMin() {
-        return duracaoMin;
-    }
-
-    public void setDuracaoMin(float duracaoMin) {
-        this.duracaoMin = duracaoMin;
-    } 
-    
-    public float getDuracaoAleatoria() {
-        return duracaoAleatoria;
-    }
-
-    public void setDuracaoAleatoria(float duracaoAleatoria) {
-        this.duracaoAleatoria = duracaoAleatoria;
-    }
-
-    public double getAmplitudeAleatoria() {
-        return amplitudeAleatoria;
-    }
-
-    public void setAmplitudeAleatoria(double amplitudeAleatoria) {
-        this.amplitudeAleatoria = amplitudeAleatoria;
-    }
     
     @Override
     public TipoOnda getTipoOnda() {
@@ -102,7 +47,7 @@ public class Aleatoria implements Onda {
         duracaoAleatoria -= 0.1;
         if(duracaoAleatoria < 0){
             duracaoAleatoria = geraDuracao();
-            return amplitudeAleatoria = geraNumAleatorio(amplitudeMax, amplitudeMin);
+            return amplitudeAleatoria = geraNumAleatorio(cfg.getAmplitudeMax(), cfg.getAmplitudeMin());
         }else{
             return amplitudeAleatoria;
         }
