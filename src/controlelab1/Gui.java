@@ -5,9 +5,17 @@
  */
 package controlelab1;
 
+import Graficos.TimeSeriesChart;
 import Enum.TipoOnda;
+import Graficos.FuncaoTimeSeries;
 import java.awt.Component;
+import java.awt.GridLayout;
+import java.io.IOException;
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JRadioButton;
+import projetocontrole.dominio.Aleatoria;
 import util.InterfaceUtil;
 import util.StringUtil;
 
@@ -29,8 +37,13 @@ public class Gui extends javax.swing.JFrame {
         for (Component funcao : funcoes) {
             buttonGroup1.add((JRadioButton) funcao);
         }
-
+        tsChart = new FuncaoTimeSeries("teste", "Volts");
+        funcaoPanel.add(tsChart);
+        funcaoPanel.revalidate();
+        funcaoPanel.setLayout(new GridLayout(1, 1));
+        funcaoPanel.repaint();
         desabilitarCampos();
+        this.pack();
     }
 
     /**
@@ -466,7 +479,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_denteSerraRadioButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+        iniciar();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -602,6 +615,24 @@ public class Gui extends javax.swing.JFrame {
     }
 
     private void atualizarParametrosMalha(TipoOnda tipo) {
-        // atualizar parametros
+    }
+
+    private void iniciar() {
+        new Thread() {
+            @Override
+            public void run() {
+                float i = 0;
+                Aleatoria teste = new Aleatoria(4, 0, 4, 2);
+                while (true) {
+
+                    try {
+                        tsChart.aualizarGrafico(teste.calcular(i++));
+                        sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }.start();
     }
 }
