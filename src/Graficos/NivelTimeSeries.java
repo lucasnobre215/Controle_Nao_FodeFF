@@ -13,8 +13,8 @@ import org.jfree.data.Range;
  */
 public class NivelTimeSeries extends TimeSeriesChart{
 
-     public NivelTimeSeries(String titulo, String grandeza) {
-        super(titulo, grandeza);
+     public NivelTimeSeries(String titulo, String grandeza,String legenda) {
+        super(titulo, grandeza, legenda);
     }
 
     @Override

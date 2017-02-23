@@ -20,12 +20,14 @@ public abstract class Controlador implements Runnable{
     public Onda onda;
     public ConfiguracaoProjeto cfg;
     public TimeSeriesChart graficoFuncao;
+    public TimeSeriesChart graficoNivel;
     //adicionar funcao
     
-    public Controlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao) {
+    public Controlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
         this.onda = cfg.getOnda();
         this.cfg = cfg;
         this.graficoFuncao = graficoFuncao;
+        this.graficoNivel = graficoNivel;
     }    
     
     

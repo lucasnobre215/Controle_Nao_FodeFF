@@ -6,6 +6,7 @@
 package Graficos;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import javax.swing.JPanel;
@@ -41,8 +42,8 @@ public abstract class TimeSeriesChart extends JPanel {
     
     
 
-    public TimeSeriesChart(String titulo, String grandeza) {
-        this.series = new TimeSeries("Fluxo", Millisecond.class);
+    public TimeSeriesChart(String titulo, String grandeza, String legenda) {
+        this.series = new TimeSeries(legenda, Millisecond.class);
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
         chart = createChart(dataset, titulo, grandeza);
         final ChartPanel chartPanel = new ChartPanel( chart );
@@ -73,7 +74,7 @@ public abstract class TimeSeriesChart extends JPanel {
 
         //Domain axis would show data of 60 seconds for a time
         xaxis.setFixedAutoRange(120000.0);  // 600 seconds
-        xaxis.setVerticalTickLabels(true);
+//        xaxis.setVerticalTickLabels(true);
 
         ValueAxis yaxis = plot.getRangeAxis();
         configuraEixoy(yaxis, true);

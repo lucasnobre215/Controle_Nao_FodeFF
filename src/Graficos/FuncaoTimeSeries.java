@@ -14,8 +14,8 @@ import org.jfree.data.time.Millisecond;
  */
 public class FuncaoTimeSeries extends TimeSeriesChart {
 
-    public FuncaoTimeSeries(String titulo, String grandeza) {
-        super(titulo, grandeza);
+    public FuncaoTimeSeries(String titulo, String grandeza, String legenda) {
+        super(titulo, grandeza, legenda);
     }
 
     @Override

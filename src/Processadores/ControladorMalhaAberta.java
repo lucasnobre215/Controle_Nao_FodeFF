@@ -14,6 +14,7 @@ import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.ConfiguracaoProjeto;
+import util.TravaSeguranca;
 
 /**
  *
@@ -21,12 +22,13 @@ import util.ConfiguracaoProjeto;
  */
 public class ControladorMalhaAberta extends Controlador {
 
-    QuanserClient client;
+    ConexaoQuanser conexao;
     double tensaoSaida;
-    double tensaoSaidaSaturada;
+    double tensaoSegura;
 
-    public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao) {
-        super(cfg, graficoFuncao);
+    public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
+        super(cfg, graficoFuncao, graficoNivel);
+        conexao = new ConexaoQuanser(cfg);
     }
 
     @Override
@@ -34,27 +36,21 @@ public class ControladorMalhaAberta extends Controlador {
         float tempo = 0;
         cfg.setIsRunning(true);
         try {
-            //        QuanserClient client = new QuanserClient("192.168.0.1", 0);
+            // A classe chamada onda tem uma interface, tem que implementar o calcular, tambem recebe a classe de configuracao
+            //Essa classe implementa uma thread
             while (cfg.isRunning()) {
                 tempo += 0.1;
                 tensaoSaida = cfg.getOnda().calcular(tempo);
-                System.out.println(tensaoSaida);
-                //System.out.println(cfg.getOnda().getTipoOnda());
-                //lersensor
-//                tratarTensao
-//                graficoFuncao.atualizarGrafico(tensaoSaidaSaturada);
-                graficoFuncao.atualizarGrafico(tensaoSaida);
-                //client.escrever(tensaoSaidaSaturada);
-
+                conexao.readValue(0);
+                tensaoSegura = TravaSeguranca.limitarTensaoMaxima(tensaoSaida);
+                graficoFuncao.atualizarGrafico(tensaoSegura);
+                graficoNivel.atualizarGrafico(cfg.getValorSensor());
+                conexao.writeValue(0, tensaoSegura);
                 sleep(100);
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(ControladorMalhaAberta.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        } catch (QuanserClientException ex) { temporizador = new Temporizador(cfg);
-//            Logger.getLogger(ControladorMalhaAberta.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
 }

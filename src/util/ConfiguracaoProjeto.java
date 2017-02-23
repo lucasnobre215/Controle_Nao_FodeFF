@@ -23,8 +23,47 @@ public class ConfiguracaoProjeto {
     private float duracaoMax;
     private float duracaoMin;
     private boolean isRunning;
+    private Double valorSensor;
+    private String ipServidor;
+    private int portaServidor; 
 
     public ConfiguracaoProjeto() {
+        this.amplitude = 0;
+        this.periodo = 0;
+        this.amplitudeMax = 0;
+        this.amplitudeMin = 0;
+        this.duracaoMax = 0;
+        this.duracaoMin = 0;
+        this.isRunning = false;
+        this.valorSensor = 0d;
+        this.ipServidor = "10.13.99.69";
+        this.portaServidor = 20081;
+    }
+    
+
+    public String getIpServidor() {
+        return ipServidor;
+    }
+
+    public void setIpServidor(String ipServidor) {
+        this.ipServidor = ipServidor;
+    }
+
+    public int getPortaServidor() {
+        return portaServidor;
+    }
+
+    public void setPortaServidor(int portaServidor) {
+        this.portaServidor = portaServidor;
+    }
+            
+
+    public Double getValorSensor() {
+        return valorSensor;
+    }
+
+    public void setValorSensor(Double valorSensor) {
+        this.valorSensor = valorSensor;
     }
 
     public Onda getOnda() {
