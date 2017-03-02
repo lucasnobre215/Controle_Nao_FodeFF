@@ -32,7 +32,7 @@ public class ControladorMalhaAberta extends Controlador {
 
     public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
         super(cfg, graficoFuncao, graficoNivel);
-        //conexao = new ConexaoQuanser(cfg);
+       conexao = new ConexaoQuanser(cfg);
     }
 
     @Override
@@ -45,12 +45,12 @@ public class ControladorMalhaAberta extends Controlador {
             while (cfg.isRunning()) {
                 tempo += 0.1;
                 tensaoSaida = cfg.getOnda().calcular(tempo);
-                //conexao.readValue(0);
+                conexao.readValue(0);
                 tensaoSegura = TravaSeguranca.limitarTensaoMaxima(tensaoSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
                 graficoFuncao.atualizarGrafico(tensaoSaida);
                 graficoNivel.atualizarGrafico(cfg.getValorSensor());
-                //conexao.writeValue(0, tensaoNivelSeguro);
+                conexao.writeValue(0, tensaoNivelSeguro);
                 sleep(100);
             }
             conexao.writeValue(0, 0d);
