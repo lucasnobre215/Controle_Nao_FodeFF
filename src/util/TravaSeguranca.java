@@ -15,8 +15,8 @@ public class TravaSeguranca {
         double retorno = tensao;
         if (tensao > 4) {
             retorno = 4;
-        } else if (tensao < 0) {
-            retorno = 0;
+        } else if (tensao < -4) {
+            retorno = -4;
         }
         return retorno;
     }

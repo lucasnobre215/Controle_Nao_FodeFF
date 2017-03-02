@@ -35,6 +35,7 @@ public abstract class TimeSeriesChart extends JPanel {
 
     private static final long serialVersionUID = 5128935838291298041L;
     private TimeSeries series;
+    private TimeSeries funcaoNaoSaturada;
     private final JFreeChart chart;
     
     public abstract Range getRangeY();
@@ -43,7 +44,7 @@ public abstract class TimeSeriesChart extends JPanel {
     
 
     public TimeSeriesChart(String titulo, String grandeza, String legenda) {
-        this.series = new TimeSeries(legenda, Millisecond.class);
+        this.series = new TimeSeries(legenda, Millisecond.class); 
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
         chart = createChart(dataset, titulo, grandeza);
         final ChartPanel chartPanel = new ChartPanel( chart );
@@ -63,7 +64,7 @@ public abstract class TimeSeriesChart extends JPanel {
         );
 
         final XYPlot plot = result.getXYPlot();
-
+        
         plot.setBackgroundPaint(new Color(0xffffe0));
         plot.setDomainGridlinesVisible(true);
         plot.setDomainGridlinePaint(Color.lightGray);
@@ -77,6 +78,7 @@ public abstract class TimeSeriesChart extends JPanel {
 //        xaxis.setVerticalTickLabels(true);
 
         ValueAxis yaxis = plot.getRangeAxis();
+        
         configuraEixoy(yaxis, true);
 
         return result;
@@ -92,6 +94,7 @@ public abstract class TimeSeriesChart extends JPanel {
         final Millisecond now = new Millisecond();
         this.series.add(new Millisecond(), lastValue);
     }
+    
 
 }
 

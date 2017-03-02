@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.ConfiguracaoProjeto;
 import util.TravaSeguranca;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
 
 /**
  *
@@ -25,10 +28,11 @@ public class ControladorMalhaAberta extends Controlador {
     ConexaoQuanser conexao;
     double tensaoSaida;
     double tensaoSegura;
+    double tensaoNivelSeguro;
 
     public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
         super(cfg, graficoFuncao, graficoNivel);
-        conexao = new ConexaoQuanser(cfg);
+        //conexao = new ConexaoQuanser(cfg);
     }
 
     @Override
@@ -41,13 +45,15 @@ public class ControladorMalhaAberta extends Controlador {
             while (cfg.isRunning()) {
                 tempo += 0.1;
                 tensaoSaida = cfg.getOnda().calcular(tempo);
-                conexao.readValue(0);
+                //conexao.readValue(0);
                 tensaoSegura = TravaSeguranca.limitarTensaoMaxima(tensaoSaida);
-                graficoFuncao.atualizarGrafico(tensaoSegura);
+                tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
+                graficoFuncao.atualizarGrafico(tensaoSaida);
                 graficoNivel.atualizarGrafico(cfg.getValorSensor());
-                conexao.writeValue(0, tensaoSegura);
+                //conexao.writeValue(0, tensaoNivelSeguro);
                 sleep(100);
             }
+            conexao.writeValue(0, 0d);
         } catch (InterruptedException ex) {
             Logger.getLogger(ControladorMalhaAberta.class.getName()).log(Level.SEVERE, null, ex);
         }

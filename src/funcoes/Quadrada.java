@@ -29,15 +29,17 @@ public class Quadrada implements Onda{
        
     @Override
     public double calcular(float tempo) {
-      if(cfg.getPeriodo() == 0) {
+        double retorno = cfg.getOffSet();
+        if(cfg.getPeriodo() == 0) {
             return 0;
         }
 
         float tempoAtual = tempo%cfg.getPeriodo();
         if (tempoAtual < cfg.getPeriodo()/2.0) {
-            return cfg.getAmplitude();
+            retorno += cfg.getAmplitude() ;
         } else {
-            return -1*cfg.getAmplitude();
+            retorno += -1*cfg.getAmplitude();
         }
+        return retorno;
     }
 }

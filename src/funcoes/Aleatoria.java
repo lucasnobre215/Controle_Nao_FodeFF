@@ -47,9 +47,9 @@ public class Aleatoria implements Onda {
         duracaoAleatoria -= 0.1;
         if(duracaoAleatoria < 0){
             duracaoAleatoria = geraDuracao();
-            return amplitudeAleatoria = geraNumAleatorio(cfg.getAmplitudeMax(), cfg.getAmplitudeMin());
+            return  amplitudeAleatoria = cfg.getOffSet() + geraNumAleatorio(cfg.getAmplitudeMax(), cfg.getAmplitudeMin());
         }else{
-            return amplitudeAleatoria;
+            return amplitudeAleatoria + cfg.getOffSet();
         }
     }
 }

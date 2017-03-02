@@ -24,7 +24,7 @@ public class Degrau implements Onda{
 
     @Override
     public double calcular(float tempo) {
-        return cfg.getAmplitude();
+        return cfg.getAmplitude() +cfg.getOffSet();
     }
     
     @Override

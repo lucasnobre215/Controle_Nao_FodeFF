@@ -11,6 +11,7 @@ import funcoes.Degrau;
 import funcoes.Onda;
 import funcoes.Quadrada;
 import funcoes.Senoide;
+import funcoes.Serra;
 import projetocontrole.dominio.Aleatoria;
 
 /**
@@ -32,7 +33,7 @@ public class FabricaOnda {
                 geradorOnda = new Senoide(cfg);
                 break;
             case Serra:
-//                geradorOnda = new Serra(cfg.getAmplitude(), cfg.getPeriodo());  
+                geradorOnda = new Serra(cfg);  
                 break;
             case Aleatoria:
                 geradorOnda = new Aleatoria(cfg);
