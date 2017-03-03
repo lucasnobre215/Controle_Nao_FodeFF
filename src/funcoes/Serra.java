@@ -29,7 +29,7 @@ public class Serra implements Onda {
         } else {
             double saida;
             float tempoAtual = tempo % cfg.getPeriodo();
-            saida = (2 * cfg.getAmplitude() * (tempoAtual / cfg.getPeriodo()) - cfg.getAmplitude());
+            saida = cfg.getOffSet()+(2 * cfg.getAmplitude() * (tempoAtual / cfg.getPeriodo()) - cfg.getAmplitude());
             return saida;
         }
     }

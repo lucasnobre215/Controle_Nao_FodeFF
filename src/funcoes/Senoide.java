@@ -27,7 +27,7 @@ public class Senoide implements Onda {
         if (cfg.getPeriodo() == 0) {
             return 0;
         } else {
-            return cfg.getAmplitude() * MathUtil.round(Math.sin((tempo/cfg.getPeriodo())*(2*Math.PI)) , 2);
+            return cfg.getOffSet()+cfg.getAmplitude() * MathUtil.round(Math.sin((tempo/cfg.getPeriodo())*(2*Math.PI)) , 2);
         }
     }
 

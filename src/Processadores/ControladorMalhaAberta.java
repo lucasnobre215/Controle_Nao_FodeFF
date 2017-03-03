@@ -32,7 +32,7 @@ public class ControladorMalhaAberta extends Controlador {
 
     public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
         super(cfg, graficoFuncao, graficoNivel);
-       conexao = new ConexaoQuanser(cfg);
+        conexao = new ConexaoQuanser(cfg);
     }
 
     @Override

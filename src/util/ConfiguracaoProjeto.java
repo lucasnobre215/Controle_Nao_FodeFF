@@ -5,6 +5,7 @@
  */
 package util;
 
+import Enum.TipoMalha;
 import Enum.TipoOnda;
 import funcoes.Onda;
 
@@ -17,6 +18,7 @@ public class ConfiguracaoProjeto {
     private Onda onda;
     private double offSet;
     private TipoOnda tipoOnda;
+    private TipoMalha tipoMalha;
     private double amplitude;
     private float periodo;
     private double amplitudeMax;
@@ -67,6 +69,15 @@ public class ConfiguracaoProjeto {
         return amplitudeMinMalhaFechada;
     }
 
+    public TipoMalha getTipoMalha() {
+        return tipoMalha;
+    }
+
+    public void setTipoMalha(TipoMalha tipoMalha) {
+        this.tipoMalha = tipoMalha;
+    }
+    
+
     public void setAmplitudeMinMalhaFechada(double amplitudeMinMalhaFechada) {
         this.amplitudeMinMalhaFechada = amplitudeMinMalhaFechada;
     }
@@ -109,19 +120,7 @@ public class ConfiguracaoProjeto {
         this.onda = onda;
     }
 
-    public double getAmplitude() {
-        
-        if(this.tipoDeMalha.equals("Fechada")){
-            System.out.println("relacao = " + valorSensor/alturaDesejada);
-            System.out.println("altura = " + alturaDesejada);
-            System.out.println("valor sensor = " + valorSensor);
-            System.out.println("A amplitude maxima eh "+ amplitudeMaxMalhaFechada);
-            
-            double valor = this.amplitudeMaxMalhaFechada*(1.0 - this.valorSensor/this.alturaDesejada );
-            System.out.println("O valor eh "+ valor);
-            return valor; 
-        }
-        
+    public double getAmplitude() {       
         return amplitude;
     }
 

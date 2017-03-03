@@ -5,12 +5,14 @@
  */
 package controlelab1;
 
+import Enum.TipoMalha;
 import Graficos.TimeSeriesChart;
 import Enum.TipoOnda;
 import static Enum.TipoOnda.Degrau;
 import static Enum.TipoOnda.Serra;
 import Graficos.FuncaoTimeSeries;
 import Graficos.NivelTimeSeries;
+import Processadores.Controlador;
 import Processadores.ControladorMalhaAberta;
 import funcoes.Degrau;
 import funcoes.Onda;
@@ -29,6 +31,7 @@ import util.ConfiguracaoProjeto;
 import util.InterfaceUtil;
 import util.StringUtil;
 import static java.lang.Thread.sleep;
+import util.FabricaControlador;
 import util.FabricaOnda;
 import util.ThreadFactory;
 
@@ -38,7 +41,7 @@ import util.ThreadFactory;
  */
 public class Gui extends javax.swing.JFrame {
 
-    TimeSeriesChart funcaoChart,nivelChart;
+    TimeSeriesChart funcaoChart, nivelChart;
     TipoOnda tipo;
     ConfiguracaoProjeto cfg;
 
@@ -589,15 +592,15 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_periodoMaxAleStateChanged
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       new TelaConexaoConfig(cfg).setVisible(true);
+        new TelaConexaoConfig(cfg).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       cfg.setIsRunning(false);        // TODO add your handling code here:
+        cfg.setIsRunning(false);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void offsetSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_offsetSpinnerStateChanged
-       atualizarParametrosMalha();
+        atualizarParametrosMalha();
     }//GEN-LAST:event_offsetSpinnerStateChanged
 
     /**
@@ -685,28 +688,26 @@ public class Gui extends javax.swing.JFrame {
 
     private void habilitarCampos(TipoOnda tipo) {
         desabilitarCampos();
-        
-        if(indicadorMalhaFechada.isSelected()){
-            altura.setEnabled(true);
-            cfg.setTipoDeMalha("Fechada");
-        }
-        else{
-            cfg.setTipoDeMalha("Aberta");
-        }
+
         if (!tipo.equals(TipoOnda.Aleatoria)) {
             offsetSpinner.setEnabled(true);
             amplitudeSlider.setEnabled(true);
             if (!tipo.equals(TipoOnda.Degrau)) {
                 periodo.setEnabled(true);
             }
-        } 
-        
-        else {
+        } else {
             offsetSpinner.setEnabled(true);
             periodoMinAle.setEnabled(true);
             periodoMaxAle.setEnabled(true);
             tensaoMaxAle.setEnabled(true);
             tensaoMinAle.setEnabled(true);
+        }
+        
+        if (indicadorMalhaFechada.isSelected()) {
+            altura.setEnabled(true);
+            cfg.setTipoMalha(TipoMalha.Fechada);
+        } else {
+            cfg.setTipoMalha(TipoMalha.Aberta);
         }
     }
 
@@ -729,26 +730,31 @@ public class Gui extends javax.swing.JFrame {
         float periodoMax = Float.valueOf(this.periodoMaxAle.getValue().toString());
         float periodoMin = Float.valueOf(this.periodoMinAle.getValue().toString());
         double tensaoMaxAle = Float.valueOf(this.periodoMaxAle.getValue().toString());
+        double altura = Double.valueOf(this.altura.getValue().toString());
         cfg.setOffSet(offset);
-        cfg.setAmplitude(new Double(amplitudeSlider.getValue()));
+        if (cfg.getTipoMalha().equals(TipoMalha.Aberta)) {
+            cfg.setAmplitude(new Double(amplitudeSlider.getValue()));
+        }else if(cfg.getTipoMalha().equals(TipoMalha.Fechada)){
+            cfg.setAmplitude(amplitudeSlider.getValue());
+            cfg.setAlturaDesejada(altura);
+        }
         cfg.setAmplitudeMax(tensaoMax);
         cfg.setAmplitudeMin(tensaoMin);
         cfg.setDuracaoMax(periodoMax);
         cfg.setDuracaoMin(periodoMin);
         cfg.setPeriodo(periodo);
         cfg.setTipoOnda(tipo);
-        cfg.setAlturaDesejada( Double.valueOf(altura.getValue().toString()) );
         atualizaThreadControle(cfg);
-        
-        if(indicadorMalhaFechada.isSelected()){
+
+        if (indicadorMalhaFechada.isSelected()) {
             cfg.setAmplitudeMax(4.0);
         }
     }
 
     private void iniciar() {
         atualizarParametrosMalha();
-        ControladorMalhaAberta controle = new ControladorMalhaAberta(cfg, funcaoChart, nivelChart);
-        Thread controleThread = ThreadFactory.produzirThread(controle, "Controle");
+        Controlador c = FabricaControlador.gerarControlador(cfg, funcaoChart, nivelChart);
+        Thread controleThread = ThreadFactory.produzirThread(c, "Controle");
         controleThread.start();
         System.out.println("ta rodando fi");
     }
