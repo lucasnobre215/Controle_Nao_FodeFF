@@ -1,0 +1,61 @@
+[33mcommit 6a1cc8c6c3057035d852add9b89d192534fa8e4d[m
+Merge: 7d28574 0d5cc9f
+Author: lucasnobre <lucasnobre@Lucas-MSI>
+Date:   Thu Feb 23 19:35:01 2017 -0300
+
+    Merge origin/master
+
+[33mcommit 7d28574e6ef30fa38bc19a73e55b9e53f737e651[m
+Author: lucasnobre <lucasnobre@Lucas-MSI>
+Date:   Thu Feb 23 19:34:17 2017 -0300
+
+    malha aberta funcional
+    falta implementar funcao dente de serra
+
+[33mcommit 0d5cc9fbc6d3bdd51a9065df21b04db78fc6617a[m
+Author: Felipe <Felipe>
+Date:   Thu Feb 23 15:19:09 2017 -0300
+
+    Adição das travas de tensão
+
+[33mcommit cd248ac1e3ba0bed7072b6fb814b3e27f78760ae[m
+Merge: c74ce28 43c7881
+Author: Felipe <Felipe>
+Date:   Thu Feb 23 14:39:41 2017 -0300
+
+    Merge branch 'master' of https://github.com/lucasnobre215/controlejava
+
+[33mcommit c74ce28f26b82ffe6281dc92c7a1997d5a28a5e5[m
+Author: Felipe <Felipe>
+Date:   Thu Feb 23 14:33:53 2017 -0300
+
+    Upando o arquivo maroto, o que sera que acontece
+
+[33mcommit 43c7881677f5f81a3bd6d8450e1d99ed62af6744[m
+Author: lucasnobre <lucasnobre@Lucas-samsung>
+Date:   Wed Feb 22 20:30:37 2017 -0300
+
+    graficos funcionais, funçoes funcionais,threads funcionais
+
+[33mcommit f8c8af6ebf1d1176e543614c39c7f12b23bd385a[m
+Author: lucasnobre <lucasnobre@Lucas-MSI>
+Date:   Tue Feb 21 22:01:25 2017 -0300
+
+[33mcommit bdbe7fa749f03e546ed096a30497129d9a09b123[m
+Merge: 9f13d23 6044458
+Author: lucasnobre <lucasnobre@Lucas-samsung>
+Date:   Tue Feb 21 19:09:36 2017 -0300
+
+    Merge origin/master
+
+[33mcommit 9f13d235da1b005456c1cfb1d2141c3261f7818b[m
+Author: lucasnobre <lucasnobre@Lucas-samsung>
+Date:   Tue Feb 21 18:55:21 2017 -0300
+
+    Interface parcialmente montada, graficos nao funcionais
+
+[33mcommit 604445812cb02a425d7b94d9147b5986e9cd6184[m
+Author: lucasnobre215 <lucasnobre215@gmail.com>
+Date:   Tue Feb 21 18:51:57 2017 -0300
+
+    Initial commit
