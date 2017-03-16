@@ -5,6 +5,7 @@
  */
 package funcoes;
 
+import Enum.TipoMalha;
 import Enum.TipoOnda;
 import util.ConfiguracaoProjeto;
 
@@ -12,7 +13,7 @@ import util.ConfiguracaoProjeto;
  *
  * @author lucasnobre
  */
-public class Quadrada implements Onda{
+public class Quadrada implements Onda {
 
     float amplitude;
     float periodo;
@@ -21,24 +22,27 @@ public class Quadrada implements Onda{
     public Quadrada(ConfiguracaoProjeto cfg) {
         this.cfg = cfg;
     }
-    
+
     @Override
     public TipoOnda getTipoOnda() {
         return TipoOnda.Quadrada;
     }
-       
+
     @Override
     public double calcular(float tempo) {
         double retorno = cfg.getOffSet();
-        if(cfg.getPeriodo() == 0) {
+        if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
+            retorno = 0;
+        }
+        if (cfg.getPeriodo() == 0) {
             return 0;
         }
 
-        float tempoAtual = tempo%cfg.getPeriodo();
-        if (tempoAtual < cfg.getPeriodo()/2.0) {
-            retorno += cfg.getAmplitude() ;
+        float tempoAtual = tempo % cfg.getPeriodo();
+        if (tempoAtual < cfg.getPeriodo() / 2.0) {
+            retorno += cfg.getAmplitude();
         } else {
-            retorno += -1*cfg.getAmplitude();
+            retorno += 0;
         }
         return retorno;
     }

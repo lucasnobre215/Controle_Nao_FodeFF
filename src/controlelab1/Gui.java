@@ -5,6 +5,7 @@
  */
 package controlelab1;
 
+import Enum.TipoControlador;
 import Enum.TipoMalha;
 import Graficos.TimeSeriesChart;
 import Enum.TipoOnda;
@@ -42,7 +43,7 @@ import util.ThreadFactory;
 public class Gui extends javax.swing.JFrame {
 
     TimeSeriesChart funcaoChart, nivelChart;
-    TipoOnda tipo;
+    TipoOnda tipoOnda;
     ConfiguracaoProjeto cfg;
 
     /**
@@ -56,9 +57,6 @@ public class Gui extends javax.swing.JFrame {
             buttonGroup1.add((JRadioButton) funcao);
         }
 
-        comboBoxControlador.addItem("Teste");
-        comboBoxControlador.addItem("Porra");
-        
         graficosPanel.setLayout(new GridLayout(1, 2));
         funcaoChart = new FuncaoTimeSeries("Função de Entrada", "Tensão (V)", "Tensao de Entrada");
         nivelChart = new NivelTimeSeries("Nivel Tanques", "Altura (cm)", "Nivel Tanque 1");
@@ -115,7 +113,7 @@ public class Gui extends javax.swing.JFrame {
         valorAmplitudeLabel = new javax.swing.JLabel();
         altura = new javax.swing.JSpinner();
         jLabel2 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        offsetLabel = new javax.swing.JLabel();
         offsetSpinner = new javax.swing.JSpinner();
         spinnerKp = new javax.swing.JSpinner();
         spinnerKi = new javax.swing.JSpinner();
@@ -125,12 +123,16 @@ public class Gui extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         comboBoxControlador = new javax.swing.JComboBox<>();
+        taoiSpinner = new javax.swing.JSpinner();
+        taodSpinner = new javax.swing.JSpinner();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         graficosPanel = new javax.swing.JPanel();
         funcaoPanel = new javax.swing.JPanel();
         nivelPanel = new javax.swing.JPanel();
         malhaFechadaPanel = new javax.swing.JPanel();
-        indicadorMalhaFechada = new javax.swing.JToggleButton();
+        malhaFechadaSwitch = new javax.swing.JToggleButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -296,12 +298,30 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel2.setText("Altura (cm)");
 
-        jLabel9.setText("OffSet (V)");
+        offsetLabel.setText("OffSet (V)");
 
         offsetSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.5f));
         offsetSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 offsetSpinnerStateChanged(evt);
+            }
+        });
+
+        spinnerKp.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerKpStateChanged(evt);
+            }
+        });
+
+        spinnerKi.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerKiStateChanged(evt);
+            }
+        });
+
+        spinnerKd.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerKdStateChanged(evt);
             }
         });
 
@@ -314,11 +334,32 @@ public class Gui extends javax.swing.JFrame {
         jLabel13.setText("Tipo Controlador");
 
         comboBoxControlador.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "P", "PI", "PD", "PID", "PI-D" }));
+        comboBoxControlador.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboBoxControladorMouseClicked(evt);
+            }
+        });
         comboBoxControlador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxControladorActionPerformed(evt);
             }
         });
+
+        taoiSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                taoiSpinnerStateChanged(evt);
+            }
+        });
+
+        taodSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                taodSpinnerStateChanged(evt);
+            }
+        });
+
+        jLabel14.setText("Ti");
+
+        jLabel15.setText("Td");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -330,121 +371,150 @@ public class Gui extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(amplitudeSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jLabel1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tipoOndaLabel))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(tensaoMaxAle)
-                                        .addComponent(periodoMaxAle))
-                                    .addGap(60, 60, 60)
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(periodoMinAle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(valorAmplitudeLabel)
-                                    .addGap(51, 51, 51)))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2)
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel4)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel5Layout.createSequentialGroup()
-                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(altura, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(periodo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(28, 28, 28)
-                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel12)
-                                            .addComponent(jLabel11))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(spinnerKi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(spinnerKd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(offsetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(spinnerKp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(valorAmplitudeLabel)
+                        .addGap(66, 66, 66))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tipoOndaLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(comboBoxControlador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addGap(30, 30, 30))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(171, 171, 171)
+                .addComponent(jLabel6)
+                .addGap(33, 33, 33)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(tensaoMaxAle)
+                        .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(offsetLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(offsetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(altura)
+                                        .addComponent(periodo))))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel10))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(spinnerKp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spinnerKi)
+                                    .addComponent(spinnerKd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel8))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(taoiSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(taodSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tipoOndaLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(valorAmplitudeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(amplitudeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(comboBoxControlador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(offsetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spinnerKp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(periodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerKi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel4))
-                .addGap(26, 26, 26)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(altura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(spinnerKd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tensaoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(tipoOndaLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(valorAmplitudeLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(amplitudeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel13)
+                                    .addComponent(comboBoxControlador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(45, 45, 45)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(offsetLabel)
+                                    .addComponent(offsetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(periodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(altura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8)))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(tensaoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tensaoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(2, 2, 2)
+                        .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(periodoMinAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(periodoMaxAle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(taoiSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(taodSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spinnerKp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spinnerKi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spinnerKd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton3.setText("Confirmar");
@@ -519,7 +589,7 @@ public class Gui extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        indicadorMalhaFechada.setText("Malha fechada");
+        malhaFechadaSwitch.setText("Malha Fechada");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -528,20 +598,20 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(seletorFuncaoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(13, 13, 13))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(malhaFechadaSwitch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addGap(12, 12, 12))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(indicadorMalhaFechada)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                                .addComponent(jButton3)
-                                .addGap(12, 12, 12))
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1)))
+                        .addGap(13, 13, 13)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(graficosPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -553,8 +623,8 @@ public class Gui extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
-                    .addComponent(indicadorMalhaFechada))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(malhaFechadaSwitch))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -589,7 +659,7 @@ public class Gui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 40, Short.MAX_VALUE))
         );
 
         pack();
@@ -614,9 +684,9 @@ public class Gui extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String ondaString = InterfaceUtil.getSelectedButtonText(buttonGroup1);
-        tipo = TipoOnda.valueOf(StringUtil.removerAcentos(ondaString));
+        tipoOnda = TipoOnda.valueOf(StringUtil.removerAcentos(ondaString));
+        habilitarCampos(tipoOnda);
         tipoOndaLabel.setText(ondaString);
-        habilitarCampos(tipo);
         atualizarParametrosMalha();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -658,9 +728,45 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_offsetSpinnerStateChanged
 
     private void comboBoxControladorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxControladorActionPerformed
-        // TODO add your handling code here:
-        
+        atualizarParametrosMalha();
     }//GEN-LAST:event_comboBoxControladorActionPerformed
+
+    private void spinnerKpStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKpStateChanged
+
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_spinnerKpStateChanged
+
+    private void spinnerKiStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKiStateChanged
+         Double ki = Double.valueOf(spinnerKi.getValue().toString());
+         Double kp =  Double.valueOf(spinnerKp.getValue().toString());
+         taoiSpinner.setValue(kp/ki);
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_spinnerKiStateChanged
+
+    private void spinnerKdStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKdStateChanged
+         Double kd = Double.valueOf(spinnerKd.getValue().toString());
+         Double kp =  Double.valueOf(spinnerKp.getValue().toString());
+         taodSpinner.setValue(kd/kp);
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_spinnerKdStateChanged
+
+    private void comboBoxControladorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxControladorMouseClicked
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_comboBoxControladorMouseClicked
+
+    private void taoiSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_taoiSpinnerStateChanged
+       Double taoi = Double.valueOf(taoiSpinner.getValue().toString());
+       Double kp =  Double.valueOf(spinnerKp.getValue().toString());
+       spinnerKi.setValue(kp/taoi);
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_taoiSpinnerStateChanged
+
+    private void taodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_taodSpinnerStateChanged
+        Double taod = Double.valueOf(taodSpinner.getValue().toString());
+         Double kp =  Double.valueOf(spinnerKp.getValue().toString());
+         spinnerKd.setValue(kp*taod);
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_taodSpinnerStateChanged
 
     /**
      * @param args the command line arguments
@@ -709,7 +815,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JRadioButton denteSerraRadioButton;
     private javax.swing.JPanel funcaoPanel;
     private javax.swing.JPanel graficosPanel;
-    private javax.swing.JToggleButton indicadorMalhaFechada;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -718,6 +823,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -725,7 +832,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -736,7 +842,9 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel malhaFechadaPanel;
+    private javax.swing.JToggleButton malhaFechadaSwitch;
     private javax.swing.JPanel nivelPanel;
+    private javax.swing.JLabel offsetLabel;
     private javax.swing.JSpinner offsetSpinner;
     private javax.swing.JSpinner periodo;
     private javax.swing.JSpinner periodoMaxAle;
@@ -747,6 +855,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JSpinner spinnerKd;
     private javax.swing.JSpinner spinnerKi;
     private javax.swing.JSpinner spinnerKp;
+    private javax.swing.JSpinner taodSpinner;
+    private javax.swing.JSpinner taoiSpinner;
     private javax.swing.JSpinner tensaoMaxAle;
     private javax.swing.JSpinner tensaoMinAle;
     private javax.swing.JLabel tipoOndaLabel;
@@ -756,29 +866,45 @@ public class Gui extends javax.swing.JFrame {
     private void habilitarCampos(TipoOnda tipo) {
         desabilitarCampos();
 
-        if (!tipo.equals(TipoOnda.Aleatoria)) {
-            offsetSpinner.setEnabled(true);
-            amplitudeSlider.setEnabled(true);
-            if (!tipo.equals(TipoOnda.Degrau)) {
-                periodo.setEnabled(true);
-            }
-        } else {
-            offsetSpinner.setEnabled(true);
-            periodoMinAle.setEnabled(true);
-            periodoMaxAle.setEnabled(true);
-            tensaoMaxAle.setEnabled(true);
-            tensaoMinAle.setEnabled(true);
-        }
-        
-        if (indicadorMalhaFechada.isSelected()) {
+        if (malhaFechadaSwitch.isSelected()) {
             altura.setEnabled(true);
             cfg.setTipoMalha(TipoMalha.Fechada);
+            comboBoxControlador.setEnabled(true);
+            if (!tipo.equals(TipoOnda.Aleatoria)) {
+                offsetSpinner.setEnabled(true);
+                if (!tipo.equals(TipoOnda.Degrau)) {
+                    periodo.setEnabled(true);
+                }
+            } else {
+                offsetSpinner.setEnabled(true);
+                periodoMinAle.setEnabled(true);
+                periodoMaxAle.setEnabled(true);
+                tensaoMaxAle.setEnabled(true);
+                tensaoMinAle.setEnabled(true);
+            }
+            spinnerKd.setEnabled(true);
         } else {
+            if (!tipo.equals(TipoOnda.Aleatoria)) {
+                offsetSpinner.setEnabled(true);
+                amplitudeSlider.setEnabled(true);
+                if (!tipo.equals(TipoOnda.Degrau)) {
+                    periodo.setEnabled(true);
+                }
+            } else {
+                offsetSpinner.setEnabled(true);
+                periodoMinAle.setEnabled(true);
+                periodoMaxAle.setEnabled(true);
+                tensaoMaxAle.setEnabled(true);
+                tensaoMinAle.setEnabled(true);
+            }
+            comboBoxControlador.setEnabled(false);
             cfg.setTipoMalha(TipoMalha.Aberta);
         }
     }
 
     private void desabilitarCampos() {
+        desativarParametrosControle();
+        comboBoxControlador.setEnabled(false);
         offsetSpinner.setEnabled(false);
         amplitudeSlider.setEnabled(false);
         tensaoMaxAle.setEnabled(false);
@@ -801,30 +927,30 @@ public class Gui extends javax.swing.JFrame {
         double Kp = Double.valueOf(this.spinnerKp.getValue().toString());
         double Ki = Double.valueOf(this.spinnerKi.getValue().toString());
         double Kd = Double.valueOf(this.spinnerKd.getValue().toString());
-        
+
         cfg.setOffSet(offset);
         if (cfg.getTipoMalha().equals(TipoMalha.Aberta)) {
+             this.offsetLabel.setText("Offset (V)");
             cfg.setAmplitude(new Double(amplitudeSlider.getValue()));
-        }else if(cfg.getTipoMalha().equals(TipoMalha.Fechada)){
-            cfg.setAmplitude(amplitudeSlider.getValue());
-            cfg.setAlturaDesejada(altura);
-            cfg.setTipoControlador(String.valueOf(comboBoxControlador.getSelectedItem()));
-            
+        } else if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
+            cfg.setAmplitude(4.0);
+            this.offsetLabel.setText("Offset (cm)");
+            cfg.setAlturaDesejada(altura+offset);
+            cfg.setTipoControlador(TipoControlador.valorDe(String.valueOf(comboBoxControlador.getSelectedItem())));
         }
         cfg.setAmplitudeMax(tensaoMax);
         cfg.setAmplitudeMin(tensaoMin);
         cfg.setDuracaoMax(periodoMax);
         cfg.setDuracaoMin(periodoMin);
+
         cfg.setKp(Kp);
         cfg.setKi(Ki);
         cfg.setKd(Kd);
         cfg.setPeriodo(periodo);
-        cfg.setTipoOnda(tipo);
+        cfg.setTipoOnda(tipoOnda);
         atualizaThreadControle(cfg);
+        atualizaParametrosControle(cfg);
 
-        if (indicadorMalhaFechada.isSelected()) {
-            cfg.setAmplitudeMax(4.0);
-        }
     }
 
     private void iniciar() {
@@ -838,6 +964,43 @@ public class Gui extends javax.swing.JFrame {
     public void atualizaThreadControle(ConfiguracaoProjeto cfg) {
         Onda novaOnda = FabricaOnda.fabricarOnda(cfg);
         this.cfg.setOnda(novaOnda);
+    }
+
+    private void atualizaParametrosControle(ConfiguracaoProjeto cfg) {
+        desativarParametrosControle();
+        switch (cfg.getTipoControlador()) {
+            case P:
+                spinnerKp.setEnabled(true);
+                break;
+            case PD:
+                spinnerKp.setEnabled(true);
+                spinnerKd.setEnabled(true);
+                taodSpinner.setEnabled(true);
+                break;
+            case PI:
+                spinnerKp.setEnabled(true);
+                spinnerKi.setEnabled(true);
+                taoiSpinner.setEnabled(true);
+                break;
+            case PI_D:
+            case PID:
+                spinnerKp.setEnabled(true);
+                spinnerKd.setEnabled(true);
+                taodSpinner.setEnabled(true);
+                spinnerKi.setEnabled(true);
+                taoiSpinner.setEnabled(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void desativarParametrosControle() {
+        taodSpinner.setEnabled(false);
+        taoiSpinner.setEnabled(false);
+        spinnerKi.setEnabled(false);
+        spinnerKd.setEnabled(false);
+        spinnerKp.setEnabled(false);
     }
 
 }

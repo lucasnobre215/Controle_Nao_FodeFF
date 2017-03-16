@@ -5,6 +5,7 @@
  */
 package funcoes;
 
+import Enum.TipoMalha;
 import Enum.TipoOnda;
 import util.ConfiguracaoProjeto;
 
@@ -12,24 +13,27 @@ import util.ConfiguracaoProjeto;
  *
  * @author lucasnobre
  */
-public class Degrau implements Onda{
-    
+public class Degrau implements Onda {
+
     ConfiguracaoProjeto cfg;
-    
 
     public Degrau(ConfiguracaoProjeto cfg) {
-         this.cfg= cfg;
+        this.cfg = cfg;
     }
-    
 
     @Override
     public double calcular(float tempo) {
-        return cfg.getAmplitude() +cfg.getOffSet();
+        if (cfg.getTipoMalha().equals(TipoMalha.Aberta)) {
+            return cfg.getAmplitude() + cfg.getOffSet();
+        } else if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
+            return cfg.getAmplitude();
+        }
+        return 0;
     }
-    
+
     @Override
     public TipoOnda getTipoOnda() {
         return TipoOnda.Degrau;
     }
-    
+
 }

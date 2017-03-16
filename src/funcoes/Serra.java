@@ -5,6 +5,7 @@
  */
 package funcoes;
 
+import Enum.TipoMalha;
 import Enum.TipoOnda;
 import projetocontrole.util.MathUtil;
 import util.ConfiguracaoProjeto;
@@ -29,7 +30,14 @@ public class Serra implements Onda {
         } else {
             double saida;
             float tempoAtual = tempo % cfg.getPeriodo();
-            saida = cfg.getOffSet()+(2 * cfg.getAmplitude() * (tempoAtual / cfg.getPeriodo()) - cfg.getAmplitude());
+            saida = cfg.getOffSet() + (2 * cfg.getAmplitude() * (tempoAtual / cfg.getPeriodo()) - cfg.getAmplitude());
+
+            if (cfg.getTipoMalha().equals(TipoMalha.Aberta)) {
+                saida = cfg.getOffSet() + (2 * cfg.getAmplitude() * (tempoAtual / cfg.getPeriodo()) - cfg.getAmplitude());
+            } else if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
+                saida = (2 * cfg.getAmplitude() * (tempoAtual / cfg.getPeriodo()) - cfg.getAmplitude());
+            }
+
             return saida;
         }
     }

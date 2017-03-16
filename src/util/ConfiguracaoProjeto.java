@@ -5,6 +5,7 @@
  */
 package util;
 
+import Enum.TipoControlador;
 import Enum.TipoMalha;
 import Enum.TipoOnda;
 import funcoes.Onda;
@@ -37,7 +38,7 @@ public class ConfiguracaoProjeto {
     private double Kp;
     private double Ki;
     private double Kd;
-    private String tipoControlador;
+    private TipoControlador tipoControlador;
 
     public ConfiguracaoProjeto() {
         this.amplitude = 0;
@@ -56,7 +57,7 @@ public class ConfiguracaoProjeto {
         this.tipoDeMalha = "Aberta";
         this.alturaDesejada = 10.0;
         this.tempoAmostragem = 0.1;
-        this.tipoControlador = ""; 
+        this.tipoControlador = TipoControlador.ABERTO; 
     }
     
 
@@ -143,13 +144,23 @@ public class ConfiguracaoProjeto {
         this.periodo = periodo;
     }
 
-    public TipoOnda getTipoOnda() {
+   
+     public TipoOnda getTipoOnda() {
         return tipoOnda;
     }
 
     public void setTipoOnda(TipoOnda tipoOnda) {
         this.tipoOnda = tipoOnda;
     }
+     public TipoControlador getTipoControlador() {
+        return tipoControlador;
+    }
+
+    public void setTipoControlador(TipoControlador tipoControlador) {
+        this.tipoControlador = tipoControlador;
+    }  
+    
+    
     
     public double getAmplitudeMax() {
         return amplitudeMax;
@@ -202,11 +213,7 @@ public class ConfiguracaoProjeto {
     public double getAlturaDesejada(){
         return alturaDesejada;
     }
-    
-    public String getTipoControlador(){
-        return this.tipoControlador;
-    }
-    
+       
     public void setDuracaoMin(float duracaoMin) {
         this.duracaoMin = duracaoMin;
     }
@@ -243,10 +250,6 @@ public class ConfiguracaoProjeto {
         this.Kd = Kd;
     }
     
-    public void setTipoControlador(String controlador){
-        this.tipoControlador = controlador;
-    }
-
     public boolean isRunning() {
         return isRunning;
     }    
