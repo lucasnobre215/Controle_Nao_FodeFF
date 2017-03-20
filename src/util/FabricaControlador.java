@@ -11,7 +11,7 @@ import Processadores.Controlador;
 import Processadores.ControladorMalhaAberta;
 import Processadores.ControleMalhaFechada;
 import funcoes.Serra;
-import projetocontrole.dominio.Aleatoria;
+
 
 /**
  *

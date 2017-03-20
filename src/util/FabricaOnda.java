@@ -7,12 +7,14 @@ package util;
 
 import static Enum.TipoOnda.Degrau;
 import static Enum.TipoOnda.Quadrada;
+
 import funcoes.Degrau;
 import funcoes.Onda;
 import funcoes.Quadrada;
 import funcoes.Senoide;
 import funcoes.Serra;
 import projetocontrole.dominio.Aleatoria;
+
 
 /**
  *

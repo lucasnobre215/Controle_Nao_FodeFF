@@ -44,7 +44,6 @@ public class Serra implements Onda {
 
     @Override
     public TipoOnda getTipoOnda() {
-        return TipoOnda.Serra;
+      return TipoOnda.Serra;
     }
-
 }

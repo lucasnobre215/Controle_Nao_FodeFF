@@ -295,6 +295,11 @@ public class Gui extends javax.swing.JFrame {
         valorAmplitudeLabel.setText("0");
 
         altura.setModel(new javax.swing.SpinnerNumberModel(0, 0, 30, 1));
+        altura.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                alturaStateChanged(evt);
+            }
+        });
 
         jLabel2.setText("Altura (cm)");
 
@@ -307,18 +312,21 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        spinnerKp.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         spinnerKp.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinnerKpStateChanged(evt);
             }
         });
 
+        spinnerKi.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         spinnerKi.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinnerKiStateChanged(evt);
             }
         });
 
+        spinnerKd.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         spinnerKd.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinnerKdStateChanged(evt);
@@ -345,12 +353,14 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        taoiSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         taoiSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 taoiSpinnerStateChanged(evt);
             }
         });
 
+        taodSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         taodSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 taodSpinnerStateChanged(evt);
@@ -767,6 +777,10 @@ public class Gui extends javax.swing.JFrame {
          spinnerKd.setValue(kp*taod);
         atualizarParametrosMalha();
     }//GEN-LAST:event_taodSpinnerStateChanged
+
+    private void alturaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_alturaStateChanged
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_alturaStateChanged
 
     /**
      * @param args the command line arguments

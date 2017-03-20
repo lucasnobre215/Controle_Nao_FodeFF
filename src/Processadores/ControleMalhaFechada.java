@@ -35,34 +35,35 @@ public class ControleMalhaFechada extends Controlador {
         super(cfg, graficoFuncao, graficoNivel);
         conexao = new ConexaoQuanser(cfg);
     }
-    
+
     @Override
     public void run() {
         float tempo = 0;
         cfg.setIsRunning(true);
-        erroAnterior =0;
+        erroAnterior = 0;
         erro = 0;
-        acaoIntegrativa =0;
-        valorSensorAnterior =0;
-        
+        acaoIntegrativa = 0;
+        valorSensorAnterior = 0;
+
         try {
             // A classe chamada onda tem uma interface, tem que implementar o calcular, tambem recebe a classe de configuracao
             //Essa classe implementa uma thread
             while (cfg.isRunning()) {
-                erroAnterior = erro;
                 tempo += cfg.getTempoAmostragem();
                 tensaoSaida = cfg.getOnda().calcular(tempo);
                 conexao.readValue(0);
                 erro = cfg.getAlturaDesejada() - cfg.getValorSensor();
-                
-                acaoProporcional= cfg.getKp()*erro;
+
+                acaoProporcional = cfg.getKp() * erro;
                 acaoIntegrativa = acaoIntegrativa + (cfg.getKi() * cfg.getTempoAmostragem() * erro);
-                if (!"PI-D".equals(cfg.getTipoControlador())){
-                    acaoDerivativa = cfg.getKd() * (erro - erroAnterior)/(cfg.getTempoAmostragem());
-                }
-                else{
+                if (!"PI-D".equals(cfg.getTipoControlador())) {
+                    acaoDerivativa = cfg.getKd() * (erro - erroAnterior) / (cfg.getTempoAmostragem());
+                } else {
                     acaoDerivativa = cfg.getKd() * (cfg.getValorSensor() - valorSensorAnterior) / (cfg.getTempoAmostragem());
+
                 }
+                erroAnterior = erro;
+                valorSensorAnterior = cfg.getValorSensor();
                 sinalSaida = acaoProporcional + acaoIntegrativa + acaoDerivativa;
                 tensaoSegura = TravaSeguranca.limitarTensaoMaxima(sinalSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);

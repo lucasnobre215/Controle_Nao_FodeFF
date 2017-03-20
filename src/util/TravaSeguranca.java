@@ -24,7 +24,7 @@ public class TravaSeguranca {
     public static double limitarTensaoPorNivelTanque(double nivel, double tensao) {
         double retorno = tensao;
         if (nivel > 28) {
-            retorno = 0;
+            retorno = 3.1;
         } else if (nivel < 4 && tensao < 0) {
             retorno = 0.1;
         }
