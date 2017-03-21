@@ -18,6 +18,7 @@ import util.TravaSeguranca;
 import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
+import javax.swing.JLabel;
 
 /**
  *
@@ -30,8 +31,8 @@ public class ControladorMalhaAberta extends Controlador {
     double tensaoSegura;
     double tensaoNivelSeguro;
 
-    public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
-        super(cfg, graficoFuncao, graficoNivel);
+    public ControladorMalhaAberta(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel, JLabel valorLido, JLabel valorEsperado) {
+        super(cfg, graficoFuncao, graficoNivel, valorEsperado, valorLido);
         conexao = new ConexaoQuanser(cfg);
     }
 
@@ -46,10 +47,12 @@ public class ControladorMalhaAberta extends Controlador {
                 tempo += 0.1;
                 tensaoSaida = cfg.getOnda().calcular(tempo);
                 conexao.readValue(0);
+                valorLido.setText(String.valueOf(cfg.getValorSensor()));
                 tensaoSegura = TravaSeguranca.limitarTensaoMaxima(tensaoSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
-                graficoFuncao.atualizarGrafico(tensaoNivelSeguro);
-                graficoNivel.atualizarGrafico(cfg.getValorSensor());
+                graficoFuncao.atualizarGrafico(tensaoNivelSeguro, "Função de Entrada");
+                graficoFuncao.atualizarGrafico(tensaoSaida,"SetPoint");
+                graficoNivel.atualizarGrafico(cfg.getValorSensor(),"Nivel Tanques");
                 conexao.writeValue(0, tensaoNivelSeguro);
                 sleep(100);
             }

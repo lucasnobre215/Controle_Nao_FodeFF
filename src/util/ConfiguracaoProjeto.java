@@ -9,6 +9,7 @@ import Enum.TipoControlador;
 import Enum.TipoMalha;
 import Enum.TipoOnda;
 import funcoes.Onda;
+import funcoesControlador.FuncaoControle;
 
 /**
  *
@@ -17,6 +18,7 @@ import funcoes.Onda;
 public class ConfiguracaoProjeto {
     
     private Onda onda;
+    private FuncaoControle funcoesControle;
     private double offSet;
     private TipoOnda tipoOnda;
     private TipoMalha tipoMalha;
@@ -30,10 +32,10 @@ public class ConfiguracaoProjeto {
     private float duracaoMin;
     private boolean isRunning;
     private double valorSensor;
+    private double valorAnteriorSensor;
     private String ipServidor;
     private int portaServidor; 
     private String tipoDeMalha;
-    private double alturaDesejada;
     private double tempoAmostragem;
     private double Kp;
     private double Ki;
@@ -55,7 +57,6 @@ public class ConfiguracaoProjeto {
         this.ipServidor = "10.13.99.69";
         this.portaServidor = 20081;
         this.tipoDeMalha = "Aberta";
-        this.alturaDesejada = 10.0;
         this.tempoAmostragem = 0.1;
         this.tipoControlador = TipoControlador.ABERTO; 
     }
@@ -76,6 +77,16 @@ public class ConfiguracaoProjeto {
     public double getAmplitudeMinMalhaFechada() {
         return amplitudeMinMalhaFechada;
     }
+
+    public FuncaoControle getFuncoesControle() {
+        return funcoesControle;
+    }
+
+    public void setFuncoesControle(FuncaoControle funcoesControle) {
+        this.funcoesControle = funcoesControle;
+    }
+    
+    
 
     public TipoMalha getTipoMalha() {
         return tipoMalha;
@@ -158,9 +169,7 @@ public class ConfiguracaoProjeto {
 
     public void setTipoControlador(TipoControlador tipoControlador) {
         this.tipoControlador = tipoControlador;
-    }  
-    
-    
+    }      
     
     public double getAmplitudeMax() {
         return amplitudeMax;
@@ -209,10 +218,6 @@ public class ConfiguracaoProjeto {
     public float getDuracaoMin() {
         return duracaoMin;
     }
-
-    public double getAlturaDesejada(){
-        return alturaDesejada;
-    }
        
     public void setDuracaoMin(float duracaoMin) {
         this.duracaoMin = duracaoMin;
@@ -228,10 +233,6 @@ public class ConfiguracaoProjeto {
     
     public void setTipoDeMalha(String malha){
         this.tipoDeMalha = malha;
-    }
-    
-    public void setAlturaDesejada(double altura){
-        this.alturaDesejada = altura;
     }
     
     public void setTempoAmostragem(double tempo){
@@ -253,4 +254,13 @@ public class ConfiguracaoProjeto {
     public boolean isRunning() {
         return isRunning;
     }    
+
+    public double getValorAnteriorSensor() {
+        return valorAnteriorSensor;
+    }
+
+    public void setValorAnteriorSensor(double valorAnteriorSensor) {
+        this.valorAnteriorSensor = valorAnteriorSensor;
+    }
+    
 }

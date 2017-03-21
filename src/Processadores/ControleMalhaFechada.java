@@ -9,6 +9,7 @@ import Graficos.TimeSeriesChart;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import util.ConfiguracaoProjeto;
 import util.TravaSeguranca;
 
@@ -19,7 +20,7 @@ import util.TravaSeguranca;
 public class ControleMalhaFechada extends Controlador {
 
     ConexaoQuanser conexao;
-    double tensaoSaida;
+    double setPoint;
     double alturaDesejada;
     double sinalSaida;
     double valorSensorAnterior;
@@ -31,8 +32,8 @@ public class ControleMalhaFechada extends Controlador {
     double acaoIntegrativa;
     double erro;
 
-    public ControleMalhaFechada(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
-        super(cfg, graficoFuncao, graficoNivel);
+    public ControleMalhaFechada(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel, JLabel valorLido, JLabel valorEsperado) {
+        super(cfg, graficoFuncao, graficoNivel, valorEsperado, valorLido);
         conexao = new ConexaoQuanser(cfg);
     }
 
@@ -50,25 +51,19 @@ public class ControleMalhaFechada extends Controlador {
             //Essa classe implementa uma thread
             while (cfg.isRunning()) {
                 tempo += cfg.getTempoAmostragem();
-                tensaoSaida = cfg.getOnda().calcular(tempo);
+                setPoint = cfg.getOnda().calcular(tempo);
                 conexao.readValue(0);
-                erro = cfg.getAlturaDesejada() - cfg.getValorSensor();
+                valorLido.setText(String.valueOf(cfg.getValorSensor()));
 
-                acaoProporcional = cfg.getKp() * erro;
-                acaoIntegrativa = acaoIntegrativa + (cfg.getKi() * cfg.getTempoAmostragem() * erro);
-                if (!"PI-D".equals(cfg.getTipoControlador())) {
-                    acaoDerivativa = cfg.getKd() * (erro - erroAnterior) / (cfg.getTempoAmostragem());
-                } else {
-                    acaoDerivativa = cfg.getKd() * (cfg.getValorSensor() - valorSensorAnterior) / (cfg.getTempoAmostragem());
-
-                }
-                erroAnterior = erro;
-                valorSensorAnterior = cfg.getValorSensor();
-                sinalSaida = acaoProporcional + acaoIntegrativa + acaoDerivativa;
-                tensaoSegura = TravaSeguranca.limitarTensaoMaxima(sinalSaida);
+                erro = setPoint - cfg.getValorSensor();
+                sinalSaida = funcoesControle.calcular(erro);
+                
+                sinalSaida
+                        = tensaoSegura = TravaSeguranca.limitarTensaoMaxima(sinalSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
-                graficoFuncao.atualizarGrafico(tensaoNivelSeguro);
-                graficoNivel.atualizarGrafico(cfg.getValorSensor());
+                graficoFuncao.atualizarGrafico(tensaoNivelSeguro, "Função de Entrada");
+                graficoFuncao.atualizarGrafico(setPoint, "SetPoint");
+                graficoNivel.atualizarGrafico(cfg.getValorSensor(), "Nivel Tanques");
                 conexao.writeValue(0, tensaoNivelSeguro);
                 sleep(100);
             }

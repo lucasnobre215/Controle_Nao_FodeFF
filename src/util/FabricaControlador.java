@@ -11,6 +11,7 @@ import Processadores.Controlador;
 import Processadores.ControladorMalhaAberta;
 import Processadores.ControleMalhaFechada;
 import funcoes.Serra;
+import javax.swing.JLabel;
 
 
 /**
@@ -19,15 +20,16 @@ import funcoes.Serra;
  */
 public class FabricaControlador {
     
-    public static Controlador gerarControlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel){
+    public static Controlador gerarControlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao,
+            TimeSeriesChart graficoNivel, JLabel valorLido, JLabel valorEsperado){
         Controlador c;
         
         switch (cfg.getTipoMalha()) {
             case Aberta:
-                c = new ControladorMalhaAberta(cfg, graficoFuncao, graficoNivel);  
+                c = new ControladorMalhaAberta(cfg, graficoFuncao, graficoNivel, valorLido, valorEsperado);  
                 break;
             case Fechada:
-                c = new ControleMalhaFechada(cfg, graficoFuncao, graficoNivel);
+                c = new ControleMalhaFechada(cfg, graficoFuncao, graficoNivel, valorLido, valorEsperado);
                 break;
             default:
                 throw new UnsupportedOperationException("Tipo de onda inválida");

@@ -19,6 +19,7 @@ import funcoes.Degrau;
 import funcoes.Onda;
 import funcoes.Quadrada;
 import funcoes.Senoide;
+import funcoesControlador.FuncaoControle;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -33,6 +34,7 @@ import util.InterfaceUtil;
 import util.StringUtil;
 import static java.lang.Thread.sleep;
 import util.FabricaControlador;
+import util.FabricaFuncaoControlador;
 import util.FabricaOnda;
 import util.ThreadFactory;
 
@@ -57,19 +59,28 @@ public class Gui extends javax.swing.JFrame {
             buttonGroup1.add((JRadioButton) funcao);
         }
 
+        this.leituraEsperadaLabel.setText("");
+        this.leituraEsperadaEstaticaLabel.setText("");
+        this.leituraSensorLabel.setText("");
+
         graficosPanel.setLayout(new GridLayout(1, 2));
         funcaoChart = new FuncaoTimeSeries("Função de Entrada", "Tensão (V)", "Tensao de Entrada");
         nivelChart = new NivelTimeSeries("Nivel Tanques", "Altura (cm)", "Nivel Tanque 1");
+        funcaoChart.adicionarSerie("SetPoint");
         funcaoPanel.add(funcaoChart);
         nivelPanel.add(nivelChart);
 
         nivelPanel.revalidate();
+        nivelPanel.setPreferredSize(new Dimension(50, 250));
         nivelPanel.setLayout(new GridLayout(1, 1));
         nivelPanel.repaint();
         funcaoPanel.revalidate();
         funcaoPanel.setLayout(new GridLayout(1, 1));
         funcaoPanel.repaint();
         desabilitarCampos();
+        this.pack();
+        this.setLocationRelativeTo(null);
+
         this.pack();
     }
 
@@ -131,8 +142,12 @@ public class Gui extends javax.swing.JFrame {
         graficosPanel = new javax.swing.JPanel();
         funcaoPanel = new javax.swing.JPanel();
         nivelPanel = new javax.swing.JPanel();
-        malhaFechadaPanel = new javax.swing.JPanel();
         malhaFechadaSwitch = new javax.swing.JToggleButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        leituraSensorLabel = new javax.swing.JLabel();
+        leituraEsperadaLabel = new javax.swing.JLabel();
+        leituraEsperadaEstaticaLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -199,7 +214,7 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(denteSerraRadioButton)))
                     .addComponent(quadradaRadioButton)
                     .addComponent(aleatoriaRadioButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
         seletorFuncaoPanelLayout.setVerticalGroup(
             seletorFuncaoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -542,7 +557,7 @@ public class Gui extends javax.swing.JFrame {
         funcaoPanel.setLayout(funcaoPanelLayout);
         funcaoPanelLayout.setHorizontalGroup(
             funcaoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 320, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         funcaoPanelLayout.setVerticalGroup(
             funcaoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -555,22 +570,11 @@ public class Gui extends javax.swing.JFrame {
         nivelPanel.setLayout(nivelPanelLayout);
         nivelPanelLayout.setHorizontalGroup(
             nivelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 199, Short.MAX_VALUE)
         );
         nivelPanelLayout.setVerticalGroup(
             nivelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 84, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout malhaFechadaPanelLayout = new javax.swing.GroupLayout(malhaFechadaPanel);
-        malhaFechadaPanel.setLayout(malhaFechadaPanelLayout);
-        malhaFechadaPanelLayout.setHorizontalGroup(
-            malhaFechadaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 121, Short.MAX_VALUE)
-        );
-        malhaFechadaPanelLayout.setVerticalGroup(
-            malhaFechadaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout graficosPanelLayout = new javax.swing.GroupLayout(graficosPanel);
@@ -580,12 +584,9 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(graficosPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(graficosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(funcaoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nivelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(45, Short.MAX_VALUE))
-            .addGroup(graficosPanelLayout.createSequentialGroup()
-                .addComponent(malhaFechadaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(nivelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(funcaoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         graficosPanelLayout.setVerticalGroup(
             graficosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,52 +595,96 @@ public class Gui extends javax.swing.JFrame {
                 .addComponent(funcaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nivelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(malhaFechadaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         malhaFechadaSwitch.setText("Malha Fechada");
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Leituras"));
+
+        jLabel9.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jLabel9.setText("Leitura do Sensor Atual");
+
+        leituraSensorLabel.setText("inicial");
+
+        leituraEsperadaLabel.setText("inicial");
+
+        leituraEsperadaEstaticaLabel.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        leituraEsperadaEstaticaLabel.setText("Leitura Esperada do Sensor");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(leituraSensorLabel)
+                .addGap(18, 18, 18)
+                .addComponent(leituraEsperadaEstaticaLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(leituraEsperadaLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel9)
+                .addComponent(leituraSensorLabel)
+                .addComponent(leituraEsperadaLabel)
+                .addComponent(leituraEsperadaEstaticaLabel))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(seletorFuncaoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(malhaFechadaSwitch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addGap(12, 12, 12))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1)))
-                        .addGap(13, 13, 13)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(graficosPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(malhaFechadaSwitch)
+                                .addGap(144, 144, 144)
+                                .addComponent(jButton3))
+                            .addComponent(seletorFuncaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(graficosPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(123, 123, 123))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(graficosPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(seletorFuncaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(malhaFechadaSwitch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(graficosPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(seletorFuncaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(malhaFechadaSwitch))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton1)))))
         );
 
         jMenu1.setText("File");
@@ -667,30 +712,15 @@ public class Gui extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 40, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void degrauRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_degrauRadioButtonActionPerformed
-
-    }//GEN-LAST:event_degrauRadioButtonActionPerformed
-
-    private void senoideRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senoideRadioButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_senoideRadioButtonActionPerformed
-
-    private void denteSerraRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_denteSerraRadioButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_denteSerraRadioButtonActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        iniciar();
-
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new TelaConexaoConfig(cfg).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String ondaString = InterfaceUtil.getSelectedButtonText(buttonGroup1);
@@ -700,87 +730,99 @@ public class Gui extends javax.swing.JFrame {
         atualizarParametrosMalha();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void periodoMinAledadosSinalGeradoChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoMinAledadosSinalGeradoChanged
+    private void taodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_taodSpinnerStateChanged
+        Double taod = Double.valueOf(taodSpinner.getValue().toString());
+        Double kp = Double.valueOf(spinnerKp.getValue().toString());
+        spinnerKd.setValue(kp * taod);
         atualizarParametrosMalha();
-    }//GEN-LAST:event_periodoMinAledadosSinalGeradoChanged
+    }//GEN-LAST:event_taodSpinnerStateChanged
 
-    private void tensaoMaxAledadosSinalGeradoChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tensaoMaxAledadosSinalGeradoChanged
+    private void taoiSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_taoiSpinnerStateChanged
+        Double taoi = Double.valueOf(taoiSpinner.getValue().toString());
+        Double kp = Double.valueOf(spinnerKp.getValue().toString());
+        spinnerKi.setValue(kp / taoi);
         atualizarParametrosMalha();
-    }//GEN-LAST:event_tensaoMaxAledadosSinalGeradoChanged
-
-    private void amplitudeSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_amplitudeSliderMouseReleased
-        valorAmplitudeLabel.setText(Integer.toString(amplitudeSlider.getValue()));
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_amplitudeSliderMouseReleased
-
-    private void stateChangedHandler(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_stateChangedHandler
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_stateChangedHandler
-
-    private void periodoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoStateChanged
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_periodoStateChanged
-
-    private void periodoMaxAleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoMaxAleStateChanged
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_periodoMaxAleStateChanged
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        new TelaConexaoConfig(cfg).setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        cfg.setIsRunning(false);        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void offsetSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_offsetSpinnerStateChanged
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_offsetSpinnerStateChanged
+    }//GEN-LAST:event_taoiSpinnerStateChanged
 
     private void comboBoxControladorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxControladorActionPerformed
         atualizarParametrosMalha();
     }//GEN-LAST:event_comboBoxControladorActionPerformed
+
+    private void comboBoxControladorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxControladorMouseClicked
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_comboBoxControladorMouseClicked
+
+    private void spinnerKdStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKdStateChanged
+        Double kd = Double.valueOf(spinnerKd.getValue().toString());
+        Double kp = Double.valueOf(spinnerKp.getValue().toString());
+        taodSpinner.setValue(kd / kp);
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_spinnerKdStateChanged
+
+    private void spinnerKiStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKiStateChanged
+        Double ki = Double.valueOf(spinnerKi.getValue().toString());
+        Double kp = Double.valueOf(spinnerKp.getValue().toString());
+        taoiSpinner.setValue(kp / ki);
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_spinnerKiStateChanged
 
     private void spinnerKpStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKpStateChanged
 
         atualizarParametrosMalha();
     }//GEN-LAST:event_spinnerKpStateChanged
 
-    private void spinnerKiStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKiStateChanged
-         Double ki = Double.valueOf(spinnerKi.getValue().toString());
-         Double kp =  Double.valueOf(spinnerKp.getValue().toString());
-         taoiSpinner.setValue(kp/ki);
+    private void offsetSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_offsetSpinnerStateChanged
         atualizarParametrosMalha();
-    }//GEN-LAST:event_spinnerKiStateChanged
-
-    private void spinnerKdStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerKdStateChanged
-         Double kd = Double.valueOf(spinnerKd.getValue().toString());
-         Double kp =  Double.valueOf(spinnerKp.getValue().toString());
-         taodSpinner.setValue(kd/kp);
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_spinnerKdStateChanged
-
-    private void comboBoxControladorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxControladorMouseClicked
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_comboBoxControladorMouseClicked
-
-    private void taoiSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_taoiSpinnerStateChanged
-       Double taoi = Double.valueOf(taoiSpinner.getValue().toString());
-       Double kp =  Double.valueOf(spinnerKp.getValue().toString());
-       spinnerKi.setValue(kp/taoi);
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_taoiSpinnerStateChanged
-
-    private void taodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_taodSpinnerStateChanged
-        Double taod = Double.valueOf(taodSpinner.getValue().toString());
-         Double kp =  Double.valueOf(spinnerKp.getValue().toString());
-         spinnerKd.setValue(kp*taod);
-        atualizarParametrosMalha();
-    }//GEN-LAST:event_taodSpinnerStateChanged
+    }//GEN-LAST:event_offsetSpinnerStateChanged
 
     private void alturaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_alturaStateChanged
         atualizarParametrosMalha();
     }//GEN-LAST:event_alturaStateChanged
+
+    private void periodoMinAledadosSinalGeradoChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoMinAledadosSinalGeradoChanged
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_periodoMinAledadosSinalGeradoChanged
+
+    private void stateChangedHandler(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_stateChangedHandler
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_stateChangedHandler
+
+    private void periodoMaxAleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoMaxAleStateChanged
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_periodoMaxAleStateChanged
+
+    private void tensaoMaxAledadosSinalGeradoChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tensaoMaxAledadosSinalGeradoChanged
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_tensaoMaxAledadosSinalGeradoChanged
+
+    private void periodoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_periodoStateChanged
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_periodoStateChanged
+
+    private void amplitudeSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_amplitudeSliderMouseReleased
+        valorAmplitudeLabel.setText(Integer.toString(amplitudeSlider.getValue()));
+        atualizarParametrosMalha();
+    }//GEN-LAST:event_amplitudeSliderMouseReleased
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        cfg.setIsRunning(false);        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        iniciar();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void degrauRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_degrauRadioButtonActionPerformed
+
+    }//GEN-LAST:event_degrauRadioButtonActionPerformed
+
+    private void denteSerraRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_denteSerraRadioButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_denteSerraRadioButtonActionPerformed
+
+    private void senoideRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senoideRadioButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_senoideRadioButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -846,16 +888,20 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JPanel malhaFechadaPanel;
+    private javax.swing.JLabel leituraEsperadaEstaticaLabel;
+    private javax.swing.JLabel leituraEsperadaLabel;
+    private javax.swing.JLabel leituraSensorLabel;
     private javax.swing.JToggleButton malhaFechadaSwitch;
     private javax.swing.JPanel nivelPanel;
     private javax.swing.JLabel offsetLabel;
@@ -944,12 +990,15 @@ public class Gui extends javax.swing.JFrame {
 
         cfg.setOffSet(offset);
         if (cfg.getTipoMalha().equals(TipoMalha.Aberta)) {
-             this.offsetLabel.setText("Offset (V)");
+            this.offsetLabel.setText("Offset (V)");
+            this.leituraEsperadaLabel.setText("");
+            this.leituraEsperadaEstaticaLabel.setText("");
             cfg.setAmplitude(new Double(amplitudeSlider.getValue()));
         } else if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
-            cfg.setAmplitude(4.0);
+            cfg.setAmplitude(altura + offset);
             this.offsetLabel.setText("Offset (cm)");
-            cfg.setAlturaDesejada(altura+offset);
+            this.leituraEsperadaLabel.setText("");
+            this.leituraEsperadaEstaticaLabel.setText("Leitura Esperada do Sensor (cm)");
             cfg.setTipoControlador(TipoControlador.valorDe(String.valueOf(comboBoxControlador.getSelectedItem())));
         }
         cfg.setAmplitudeMax(tensaoMax);
@@ -969,7 +1018,7 @@ public class Gui extends javax.swing.JFrame {
 
     private void iniciar() {
         atualizarParametrosMalha();
-        Controlador c = FabricaControlador.gerarControlador(cfg, funcaoChart, nivelChart);
+        Controlador c = FabricaControlador.gerarControlador(cfg, funcaoChart, nivelChart, leituraSensorLabel, leituraEsperadaLabel);
         Thread controleThread = ThreadFactory.produzirThread(c, "Controle");
         controleThread.start();
         System.out.println("ta rodando fi");
@@ -977,6 +1026,10 @@ public class Gui extends javax.swing.JFrame {
 
     public void atualizaThreadControle(ConfiguracaoProjeto cfg) {
         Onda novaOnda = FabricaOnda.fabricarOnda(cfg);
+        if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
+            FuncaoControle funcaoControle = FabricaFuncaoControlador.fabricarFuncaoControlador(cfg);
+             this.cfg.setFuncoesControle(funcaoControle);
+        }
         this.cfg.setOnda(novaOnda);
     }
 

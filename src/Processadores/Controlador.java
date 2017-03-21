@@ -8,6 +8,8 @@ package Processadores;
 import Graficos.FuncaoTimeSeries;
 import Graficos.TimeSeriesChart;
 import funcoes.Onda;
+import funcoesControlador.FuncaoControle;
+import javax.swing.JLabel;
 import util.ConfiguracaoProjeto;
 import util.FabricaOnda;
 
@@ -18,16 +20,22 @@ import util.FabricaOnda;
 public abstract class Controlador implements Runnable{
     
     public Onda onda;
+    public FuncaoControle funcoesControle;
     public ConfiguracaoProjeto cfg;
     public TimeSeriesChart graficoFuncao;
     public TimeSeriesChart graficoNivel;
+    public JLabel valorLido;
+    public JLabel valorEsperado;
     //adicionar funcao
     
-    public Controlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel) {
+    public Controlador(ConfiguracaoProjeto cfg, TimeSeriesChart graficoFuncao, TimeSeriesChart graficoNivel, JLabel valorLido, JLabel valorEsperado) {
         this.onda = cfg.getOnda();
+        this.funcoesControle = cfg.getFuncoesControle();
         this.cfg = cfg;
         this.graficoFuncao = graficoFuncao;
         this.graficoNivel = graficoNivel;
+        this.valorEsperado = valorEsperado;
+        this.valorLido = valorLido;
     }    
     
     

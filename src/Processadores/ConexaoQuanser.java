@@ -33,6 +33,7 @@ public class ConexaoQuanser {
    /*retorna o valor  do nivel em cm*/
    public void readValue(int porta){
         try {
+            cfg.setValorAnteriorSensor(cfg.getValorSensor());
             cfg.setValorSensor(6.25*quanser.read(porta));
         } catch (QuanserClientException ex) {
             Logger.getLogger(ConexaoQuanser.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,6 +5,8 @@
  */
 package Graficos;
 
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.data.Range;
 import org.jfree.data.time.Millisecond;
 
@@ -26,5 +28,10 @@ public class FuncaoTimeSeries extends TimeSeriesChart {
     @Override
     public Range getRangeX() {
         return new Range(0,240);}
+
+    @Override
+    protected XYItemRenderer getRenderer() {
+       return new XYStepRenderer();
+    }
     
 }
