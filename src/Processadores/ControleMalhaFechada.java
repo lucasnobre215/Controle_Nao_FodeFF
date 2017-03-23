@@ -62,7 +62,7 @@ public class ControleMalhaFechada extends Controlador {
                         = tensaoSegura = TravaSeguranca.limitarTensaoMaxima(sinalSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
                 graficoFuncao.atualizarGrafico(tensaoNivelSeguro, "Função de Entrada");
-                graficoFuncao.atualizarGrafico(setPoint, "SetPoint");
+                graficoNivel.atualizarGrafico(setPoint, "SetPoint");
                 graficoNivel.atualizarGrafico(cfg.getValorSensor(), "Nivel Tanques");
                 conexao.writeValue(0, tensaoNivelSeguro);
                 sleep(100);

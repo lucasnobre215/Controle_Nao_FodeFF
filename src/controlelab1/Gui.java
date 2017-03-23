@@ -47,6 +47,7 @@ public class Gui extends javax.swing.JFrame {
     TimeSeriesChart funcaoChart, nivelChart;
     TipoOnda tipoOnda;
     ConfiguracaoProjeto cfg;
+    boolean isSetPoint, isNotSetpoint;
 
     /**
      * Creates new form Gui
@@ -62,11 +63,12 @@ public class Gui extends javax.swing.JFrame {
         this.leituraEsperadaLabel.setText("");
         this.leituraEsperadaEstaticaLabel.setText("");
         this.leituraSensorLabel.setText("");
+        isSetPoint = false;
 
         graficosPanel.setLayout(new GridLayout(1, 2));
         funcaoChart = new FuncaoTimeSeries("Função de Entrada", "Tensão (V)", "Tensao de Entrada");
         nivelChart = new NivelTimeSeries("Nivel Tanques", "Altura (cm)", "Nivel Tanque 1");
-        funcaoChart.adicionarSerie("SetPoint");
+        //funcaoChart.adicionarSerie("SetPoint");
         funcaoPanel.add(funcaoChart);
         nivelPanel.add(nivelChart);
 
@@ -74,8 +76,9 @@ public class Gui extends javax.swing.JFrame {
         nivelPanel.setPreferredSize(new Dimension(50, 250));
         nivelPanel.setLayout(new GridLayout(1, 1));
         nivelPanel.repaint();
-        funcaoPanel.revalidate();
+
         funcaoPanel.setLayout(new GridLayout(1, 1));
+        funcaoPanel.revalidate();
         funcaoPanel.repaint();
         desabilitarCampos();
         this.pack();
@@ -335,6 +338,7 @@ public class Gui extends javax.swing.JFrame {
         });
 
         spinnerKi.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
+        spinnerKi.setVerifyInputWhenFocusTarget(false);
         spinnerKi.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinnerKiStateChanged(evt);
@@ -1013,6 +1017,13 @@ public class Gui extends javax.swing.JFrame {
         cfg.setTipoOnda(tipoOnda);
         atualizaThreadControle(cfg);
         atualizaParametrosControle(cfg);
+        if (cfg.getTipoMalha().equals(TipoMalha.Fechada) && !isSetPoint) {
+            nivelChart.adicionarSerie("SetPoint");
+
+            nivelChart.revalidate();
+            nivelChart.repaint();
+            isSetPoint = true;
+        }
 
     }
 
@@ -1028,7 +1039,7 @@ public class Gui extends javax.swing.JFrame {
         Onda novaOnda = FabricaOnda.fabricarOnda(cfg);
         if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
             FuncaoControle funcaoControle = FabricaFuncaoControlador.fabricarFuncaoControlador(cfg);
-             this.cfg.setFuncoesControle(funcaoControle);
+            this.cfg.setFuncoesControle(funcaoControle);
         }
         this.cfg.setOnda(novaOnda);
     }
