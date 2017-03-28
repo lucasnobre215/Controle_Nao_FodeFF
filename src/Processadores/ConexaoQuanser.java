@@ -28,8 +28,9 @@ public class ConexaoQuanser {
             quanser = new QuanserClient(cfg.getIpServidor(), cfg.getPortaServidor());
         } catch (QuanserClientException ex) {
             Logger.getLogger(ConexaoQuanser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }    
     }
+    
    /*retorna o valor  do nivel em cm*/
    public void readValue(int porta){
         try {

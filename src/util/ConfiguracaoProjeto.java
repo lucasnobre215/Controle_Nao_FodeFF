@@ -41,6 +41,7 @@ public class ConfiguracaoProjeto {
     private double Ki;
     private double Kd;
     private TipoControlador tipoControlador;
+    private int canalSensor;
 
     public ConfiguracaoProjeto() {
         this.amplitude = 0;
@@ -59,6 +60,7 @@ public class ConfiguracaoProjeto {
         this.tipoDeMalha = "Aberta";
         this.tempoAmostragem = 0.1;
         this.tipoControlador = TipoControlador.ABERTO; 
+        canalSensor = 1;
     }
     
 
@@ -261,6 +263,14 @@ public class ConfiguracaoProjeto {
 
     public void setValorAnteriorSensor(double valorAnteriorSensor) {
         this.valorAnteriorSensor = valorAnteriorSensor;
+    }
+    
+    public void setCanalSensor(int canal){
+        this.canalSensor = canal;
+    }
+    
+    public int getCanalSensor(){
+        return this.canalSensor;
     }
     
 }
