@@ -46,7 +46,7 @@ public class ControladorMalhaAberta extends Controlador {
             while (cfg.isRunning()) {
                 tempo += 0.1;
                 tensaoSaida = cfg.getOnda().calcular(tempo);
-                conexao.readValue(0);
+                conexao.readValue(cfg.getCanalSensor() );
                 valorLido.setText(String.valueOf(cfg.getValorSensor()));
                 tensaoSegura = TravaSeguranca.limitarTensaoMaxima(tensaoSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);

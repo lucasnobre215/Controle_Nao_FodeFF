@@ -58,8 +58,16 @@ public class ControleMalhaFechada extends Controlador {
                 erro = setPoint - cfg.getValorSensor();
                 sinalSaida = funcoesControle.calcular(erro);
                 
+                //Gabiarra para funcionar, isso precisa ser deletado, ajustar 
+                // o programa para suportar leituras de multiplos canais
+                int canal = cfg.getCanalSensor();
+                cfg.setCanalSensor(1);
+                
                 sinalSaida = tensaoSegura = TravaSeguranca.limitarTensaoMaxima(sinalSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
+                cfg.setCanalSensor(canal);
+                
+                
                 graficoFuncao.atualizarGrafico(tensaoNivelSeguro, "Função de Entrada");
                 graficoNivel.atualizarGrafico(setPoint, "SetPoint");
                 graficoNivel.atualizarGrafico(cfg.getValorSensor(), "Nivel Tanques");

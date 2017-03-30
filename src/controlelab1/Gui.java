@@ -958,6 +958,13 @@ public class Gui extends javax.swing.JFrame {
     private void habilitarCampos(TipoOnda tipo) {
         desabilitarCampos();
 
+        if(botaoControlar2Tanque.isSelected()){
+        cfg.setCanalSensor(2);
+        }
+        else{
+        cfg.setCanalSensor(1);
+        }
+        
         if (malhaFechadaSwitch.isSelected()) {
             altura.setEnabled(true);
             cfg.setTipoMalha(TipoMalha.Fechada);
