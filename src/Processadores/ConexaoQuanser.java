@@ -30,7 +30,20 @@ public class ConexaoQuanser {
             Logger.getLogger(ConexaoQuanser.class.getName()).log(Level.SEVERE, null, ex);
         }    
     }
-    
+     
+   public void lerSensorControle(int porta){
+       readValue(porta);
+   } 
+   
+   public double lerSensorSegurnacao(int porta){
+       double retorno = 0; 
+       try {
+            retorno = 6.25*quanser.read(porta);
+        } catch (QuanserClientException ex) {
+            Logger.getLogger(ConexaoQuanser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return retorno;
+   }
    /*retorna o valor  do nivel em cm*/
    public void readValue(int porta){
         try {

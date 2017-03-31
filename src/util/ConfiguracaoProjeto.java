@@ -41,7 +41,8 @@ public class ConfiguracaoProjeto {
     private double Ki;
     private double Kd;
     private TipoControlador tipoControlador;
-    private int canalSensor;
+    private int canalSensorControle;
+    private int canalSensorSeguranca;
 
     public ConfiguracaoProjeto() {
         this.amplitude = 0;
@@ -60,7 +61,8 @@ public class ConfiguracaoProjeto {
         this.tipoDeMalha = "Aberta";
         this.tempoAmostragem = 0.1;
         this.tipoControlador = TipoControlador.ABERTO; 
-        canalSensor = 1;
+        this.canalSensorControle = 0;
+        this.canalSensorSeguranca = 0;
     }
     
 
@@ -264,13 +266,23 @@ public class ConfiguracaoProjeto {
     public void setValorAnteriorSensor(double valorAnteriorSensor) {
         this.valorAnteriorSensor = valorAnteriorSensor;
     }
-    
-    public void setCanalSensor(int canal){
-        this.canalSensor = canal;
+
+    public int getCanalSensorControle() {
+        return canalSensorControle;
+    }
+
+    public void setCanalSensorControle(int canalSensorControle) {
+        this.canalSensorControle = canalSensorControle;
+    }
+
+    public int getCanalSensorSeguranca() {
+        return canalSensorSeguranca;
+    }
+
+    public void setCanalSensorSeguranca(int canalSensorSeguranca) {
+        this.canalSensorSeguranca = canalSensorSeguranca;
     }
     
-    public int getCanalSensor(){
-        return this.canalSensor;
-    }
+ 
     
 }

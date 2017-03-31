@@ -52,25 +52,26 @@ public class ControleMalhaFechada extends Controlador {
             while (cfg.isRunning()) {
                 tempo += cfg.getTempoAmostragem();
                 setPoint = cfg.getOnda().calcular(tempo);
-                conexao.readValue(0);
+                conexao.readValue(cfg.getCanalSensorControle());
                 valorLido.setText(String.valueOf(cfg.getValorSensor()));
-
                 erro = setPoint - cfg.getValorSensor();
                 sinalSaida = funcoesControle.calcular(erro);
-                
+
                 //Gabiarra para funcionar, isso precisa ser deletado, ajustar 
                 // o programa para suportar leituras de multiplos canais
-                int canal = cfg.getCanalSensor();
-                cfg.setCanalSensor(1);
-                
+                double valorSensorSeguranca = conexao.lerSensorSegurnacao(cfg.getCanalSensorSeguranca());
+
                 sinalSaida = tensaoSegura = TravaSeguranca.limitarTensaoMaxima(sinalSaida);
-                tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
-                cfg.setCanalSensor(canal);
-                
-                
+                tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(valorSensorSeguranca, tensaoSegura);
+
                 graficoFuncao.atualizarGrafico(tensaoNivelSeguro, "Função de Entrada");
                 graficoNivel.atualizarGrafico(setPoint, "SetPoint");
-                graficoNivel.atualizarGrafico(cfg.getValorSensor(), "Nivel Tanques");
+                if (cfg.getCanalSensorControle() == 1) {
+                    graficoNivel.atualizarGrafico(valorSensorSeguranca, "Nivel Tanque 1");
+                    graficoNivel.atualizarGrafico(cfg.getValorSensor(), "Nivel Tanque 2");
+                } else {
+                    graficoNivel.atualizarGrafico(cfg.getValorSensor(), "Nivel Tanque 1");
+                }
                 conexao.writeValue(0, tensaoNivelSeguro);
                 sleep(100);
             }

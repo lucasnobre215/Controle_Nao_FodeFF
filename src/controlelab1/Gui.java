@@ -67,7 +67,7 @@ public class Gui extends javax.swing.JFrame {
 
         graficosPanel.setLayout(new GridLayout(1, 2));
         funcaoChart = new FuncaoTimeSeries("Função de Entrada", "Tensão (V)", "Tensao de Entrada");
-        nivelChart = new NivelTimeSeries("Nivel Tanques", "Altura (cm)", "Nivel Tanque 1");
+        nivelChart = new NivelTimeSeries("Nivel Tanque 1", "Altura (cm)", "Nivel Tanque 1");
         //funcaoChart.adicionarSerie("SetPoint");
         funcaoPanel.add(funcaoChart);
         nivelPanel.add(nivelChart);
@@ -746,6 +746,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        habilitarBotaoTanque2();
         String ondaString = InterfaceUtil.getSelectedButtonText(buttonGroup1);
         tipoOnda = TipoOnda.valueOf(StringUtil.removerAcentos(ondaString));
         habilitarCampos(tipoOnda);
@@ -852,7 +853,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoControlar2TanqueActionPerformed
 
     private void malhaFechadaSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_malhaFechadaSwitchActionPerformed
-        // TODO add your handling code here:
+    habilitarBotaoTanque2();// TODO add your handling code here:
     }//GEN-LAST:event_malhaFechadaSwitchActionPerformed
 
     /**
@@ -958,13 +959,12 @@ public class Gui extends javax.swing.JFrame {
     private void habilitarCampos(TipoOnda tipo) {
         desabilitarCampos();
 
-        if(botaoControlar2Tanque.isSelected()){
-        cfg.setCanalSensor(2);
+        if (botaoControlar2Tanque.isSelected()) {
+            cfg.setCanalSensorControle(1);
+        } else {
+            cfg.setCanalSensorControle(0);
         }
-        else{
-        cfg.setCanalSensor(1);
-        }
-        
+
         if (malhaFechadaSwitch.isSelected()) {
             altura.setEnabled(true);
             cfg.setTipoMalha(TipoMalha.Fechada);
@@ -1003,6 +1003,7 @@ public class Gui extends javax.swing.JFrame {
 
     private void desabilitarCampos() {
         desativarParametrosControle();
+        botaoControlar2Tanque.setEnabled(false);
         comboBoxControlador.setEnabled(false);
         offsetSpinner.setEnabled(false);
         amplitudeSlider.setEnabled(false);
@@ -1012,6 +1013,15 @@ public class Gui extends javax.swing.JFrame {
         periodoMinAle.setEnabled(false);
         periodoMaxAle.setEnabled(false);
         altura.setEnabled(false);
+    }
+    
+    private void habilitarBotaoTanque2(){
+        if (malhaFechadaSwitch.isSelected()){
+            botaoControlar2Tanque.setEnabled(true);
+        }else{
+            botaoControlar2Tanque.setEnabled(false);
+            botaoControlar2Tanque.setSelected(false);
+        }
     }
 
     private void atualizarParametrosMalha() {
@@ -1026,7 +1036,7 @@ public class Gui extends javax.swing.JFrame {
         double Kp = Double.valueOf(this.spinnerKp.getValue().toString());
         double Ki = Double.valueOf(this.spinnerKi.getValue().toString());
         double Kd = Double.valueOf(this.spinnerKd.getValue().toString());
-
+        
         cfg.setOffSet(offset);
         if (cfg.getTipoMalha().equals(TipoMalha.Aberta)) {
             this.offsetLabel.setText("Offset (V)");
@@ -1034,7 +1044,9 @@ public class Gui extends javax.swing.JFrame {
             this.leituraEsperadaEstaticaLabel.setText("");
             cfg.setAmplitude(new Double(amplitudeSlider.getValue()));
         } else if (cfg.getTipoMalha().equals(TipoMalha.Fechada)) {
+            
             cfg.setAmplitude(altura + offset);
+            this.botaoControlar2Tanque.setEnabled(true);
             this.offsetLabel.setText("Offset (cm)");
             this.leituraEsperadaLabel.setText("");
             this.leituraEsperadaEstaticaLabel.setText("Leitura Esperada do Sensor (cm)");
@@ -1053,8 +1065,10 @@ public class Gui extends javax.swing.JFrame {
         atualizaThreadControle(cfg);
         atualizaParametrosControle(cfg);
         if (cfg.getTipoMalha().equals(TipoMalha.Fechada) && !isSetPoint) {
+            if (cfg.getCanalSensorControle() == 1) {
+                nivelChart.adicionarSerie("Tanque 2");
+            }
             nivelChart.adicionarSerie("SetPoint");
-
             nivelChart.revalidate();
             nivelChart.repaint();
             isSetPoint = true;

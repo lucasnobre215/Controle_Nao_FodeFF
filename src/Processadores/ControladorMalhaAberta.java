@@ -44,9 +44,9 @@ public class ControladorMalhaAberta extends Controlador {
             // A classe chamada onda tem uma interface, tem que implementar o calcular, tambem recebe a classe de configuracao
             //Essa classe implementa uma thread
             while (cfg.isRunning()) {
-                tempo += 0.1;
+                tempo += cfg.getTempoAmostragem();
                 tensaoSaida = cfg.getOnda().calcular(tempo);
-                conexao.readValue(cfg.getCanalSensor() );
+                conexao.readValue(cfg.getCanalSensorControle());
                 valorLido.setText(String.valueOf(cfg.getValorSensor()));
                 tensaoSegura = TravaSeguranca.limitarTensaoMaxima(tensaoSaida);
                 tensaoNivelSeguro = TravaSeguranca.limitarTensaoPorNivelTanque(cfg.getValorSensor(), tensaoSegura);
